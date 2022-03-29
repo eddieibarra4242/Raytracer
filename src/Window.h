@@ -14,20 +14,24 @@
    limitations under the License.
 */
 
-#include <spdlog/spdlog.h>
-#include "Window.h"
+#pragma once
 
-int main()
-{
-    Window window(1280, 720, "Raytracer");
+#include <GL/glew.h>
+#include <GLFW/glfw3.h>
 
-    glClearColor(1, 0, 0, 1);
+class Window {
+public:
+    Window(uint32_t width, uint32_t height, const char* title);
+    ~Window();
 
-    while(!window.shouldClose()) {
-        Window::poll();
+    [[nodiscard]] bool shouldClose() const;
+    void present() const;
+    static void poll();
 
-        glClear(GL_COLOR_BUFFER_BIT);
-
-        window.present();
-    }
-}
+    [[nodiscard]] constexpr uint32_t width() const { return m_width; }
+    [[nodiscard]] constexpr uint32_t height() const { return m_height; }
+private:
+    GLFWwindow* m_window;
+    uint32_t m_width;
+    uint32_t m_height;
+};
