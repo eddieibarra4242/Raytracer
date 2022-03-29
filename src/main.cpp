@@ -14,12 +14,20 @@
    limitations under the License.
 */
 
-#include <spdlog/spdlog.h>
 #include "Window.h"
+#include "Bitmap.h"
 
 int main()
 {
     Window window(1280, 720, "Raytracer");
+    Bitmap frame {1280, 720};
+
+    for(uint32_t y = 0; y < frame.height(); y++) {
+        for(uint32_t x = 0; x < frame.width(); x++) {
+            double ratio = ((static_cast<double>(x) / static_cast<double>(frame.width())) + (static_cast<double>(y) / static_cast<double>(frame.height()))) / 2;
+            frame.draw(x, y, {static_cast<uint8_t>(x), static_cast<uint8_t>(y), static_cast<uint8_t>(ratio * 255), 0});
+        }
+    }
 
     glClearColor(1, 0, 0, 1);
 
@@ -27,6 +35,8 @@ int main()
         Window::poll();
 
         glClear(GL_COLOR_BUFFER_BIT);
+
+        frame.renderWithGL();
 
         window.present();
     }

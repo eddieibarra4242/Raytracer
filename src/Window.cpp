@@ -36,6 +36,8 @@ Window::Window(uint32_t width, uint32_t height, const char *title) : m_width{ wi
     if(glewInit() != GLEW_OK) {
         spdlog::critical("Failed to init GLEW");
     }
+
+    glEnable(GL_TEXTURE_2D);
 }
 
 Window::~Window() {
