@@ -1,4 +1,4 @@
-set(CPP_SOURCES main.cpp Window.cpp Bitmap.cpp Camera.cpp)
+set(CPP_SOURCES main.cpp Window.cpp Bitmap.cpp Camera.cpp shapes/Shape.h shapes/Sphere.cpp shapes/Sphere.h vec_utilities.h shapes/Plane.cpp shapes/Plane.h)
 
 # Generic test that uses conan libs
 add_executable(raytracer ${CPP_SOURCES})
