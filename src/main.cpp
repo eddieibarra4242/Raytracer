@@ -17,15 +17,30 @@
 #include "Window.h"
 #include "Bitmap.h"
 
+#include "Ray.h"
+#include "Camera.h"
+
+#include <glm/glm.hpp>
+
 int main()
 {
     Window window(1280, 720, "Raytracer");
-    Bitmap frame {1280, 720};
+    Bitmap frame (1280, 720);
+
+    auto aspect_ratio = static_cast<float>(frame.width()) / static_cast<float>(frame.height());
+
+    Camera camera{glm::vec3(0, 0, 0), glm::vec3(0, 0, 1), aspect_ratio, 1.0f};
 
     for(uint32_t y = 0; y < frame.height(); y++) {
         for(uint32_t x = 0; x < frame.width(); x++) {
-            double ratio = ((static_cast<double>(x) / static_cast<double>(frame.width())) + (static_cast<double>(y) / static_cast<double>(frame.height()))) / 2;
-            frame.draw(x, y, {static_cast<uint8_t>(x), static_cast<uint8_t>(y), static_cast<uint8_t>(ratio * 255), 0});
+            auto u = static_cast<float>(x) / static_cast<float>(frame.width() - 1);
+            auto v = static_cast<float>(y) / static_cast<float>(frame.height() - 1);
+            Ray r = camera.to_ray(u, v);
+
+            glm::vec3 color = Ray::sky_color(r) * 255.0f;
+            Color pixel_color{static_cast<uint8_t>(color.r), static_cast<uint8_t>(color.g), static_cast<uint8_t>(color.b), 255};
+
+            frame.draw(x, y, pixel_color);
         }
     }
 
