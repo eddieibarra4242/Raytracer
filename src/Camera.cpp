@@ -25,7 +25,7 @@ Camera::Camera(const glm::vec3 &position, const glm::vec3 &forward, float aspect
     m_right = glm::normalize(glm::cross(m_forward, UP));
     m_up = glm::normalize(glm::cross(m_right, m_forward));
 
-    m_horizontal = m_right * VIEW_PORT_HEIGHT;
+    m_horizontal = m_right * VIEW_PORT_HEIGHT * aspect_ratio;
     m_vertical = m_up * VIEW_PORT_HEIGHT;
     m_top_left = (m_forward * focal_length) - (m_horizontal * 0.5f) + (m_vertical * 0.5f);
 }
