@@ -22,7 +22,7 @@ class Sphere : public Shape {
 public:
     Sphere(const glm::vec3& position, float radius) : m_position{ position }, m_radius{ radius } { }
 
-    float intersect(const Ray& ray) override;
+    [[nodiscard]] float intersect(const Ray& ray) override;
 private:
     glm::vec3 m_position;
     float m_radius;

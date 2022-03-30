@@ -22,5 +22,5 @@ class Shape
 {
 public:
     virtual ~Shape() = default;
-    virtual float intersect(const Ray& ray) = 0;
+    [[nodiscard]] virtual float intersect(const Ray& ray) = 0;
 };
