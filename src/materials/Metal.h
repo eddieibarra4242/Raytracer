@@ -20,9 +20,10 @@
 
 class Metal : public Material {
 public:
-    explicit Metal(const glm::vec3& albedo) : m_albedo(albedo) { }
+    explicit Metal(const glm::vec3& albedo, float fuzz) : m_albedo(albedo), m_fuzz(fuzz) { }
 
     [[nodiscard]] Scatter scatter(const Ray& incident, const Intersection& intersection) const override;
 private:
     glm::vec3 m_albedo;
+    float m_fuzz;
 };
