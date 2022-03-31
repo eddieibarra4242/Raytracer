@@ -32,6 +32,10 @@ constexpr float distance_sq(const glm::vec3& v) {
     return v.x * v.x + v.y * v.y + v.z * v.z;
 }
 
+constexpr uint32_t min(uint32_t a, uint32_t b) {
+    return a < b ? a : b;
+}
+
 inline float random_float() {
     static std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
     static std::default_random_engine generator;

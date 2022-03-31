@@ -18,10 +18,21 @@
 
 #include <vector>
 #include <thread>
+#include <queue>
+#include <mutex>
 
 #include "Camera.h"
 #include "Scene.h"
 #include "Bitmap.h"
+
+struct Quad
+{
+    using vec2i = glm::vec<2, uint32_t, glm::defaultp>;
+    vec2i min;
+    vec2i max;
+
+    Quad(const vec2i& min, const vec2i& max) : min(min), max(max) { }
+};
 
 class Renderer {
 public:
@@ -42,5 +53,7 @@ private:
     Scene m_scene;
     Camera m_camera;
 
-    std::unique_ptr<std::thread> m_rendering_thread;
+    std::mutex m_queue_mutex;
+    std::queue<Quad> m_work_queue;
+    std::vector<std::thread> m_rendering_threads;
 };
