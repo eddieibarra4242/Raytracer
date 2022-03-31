@@ -33,7 +33,8 @@ glm::vec3 get_color(const Scene& scene, const Ray& ray, uint32_t bounce_budget) 
     Intersection hit = scene.hit(ray);
 
     if(hit.has_hit) {
-        Ray bounce_ray{hit.intersection_point, random_from_hemisphere(hit.normal)};
+        glm::vec3 target = hit.intersection_point + hit.normal + random_normalized_vector();
+        Ray bounce_ray{hit.intersection_point, normalize(target - hit.intersection_point)};
         return 0.5f * get_color(scene, bounce_ray, bounce_budget - 1);
     }
 
