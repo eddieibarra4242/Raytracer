@@ -23,7 +23,7 @@
 class Camera
 {
 public:
-    Camera(const glm::vec3& position, const glm::vec3& forward, float aspect_ratio, float focal_length);
+    Camera(const glm::vec3& position, const glm::vec3& forward, float aspect_ratio, float fov, float aperture, float focal_length);
 
     Ray to_ray(float x, float y);
 private:
@@ -36,5 +36,8 @@ private:
     glm::vec3 m_top_left;
     glm::vec3 m_horizontal;
     glm::vec3 m_vertical;
+
+    float m_lens_radius;
+    float m_focal_length;
 };
 

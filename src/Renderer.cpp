@@ -29,6 +29,8 @@ constexpr glm::vec3 CAMERA_FORWARD = glm::vec3{0, 0, 3} - CAMERA_POSITION;
 
 constexpr uint32_t DEFAULT_QUAD_SIZE = 100;
 
+constexpr float PI = 3.14159265358979323846264338327950288419f;
+
 glm::vec3 get_color(const Scene& scene, const Ray& ray, uint32_t bounce_budget) {
     if(bounce_budget == 0) {
         return ZERO_VECTOR;
@@ -62,12 +64,12 @@ void split_image(std::queue<Quad>& queue, const Bitmap& image, uint32_t quad_siz
 
 Renderer::Renderer(uint32_t width, uint32_t height, size_t thread_count) :
     m_image(width, height),
-    m_camera(CAMERA_POSITION, CAMERA_FORWARD, static_cast<float>(width) / static_cast<float>(height), 1.0f) {
+    m_camera(CAMERA_POSITION, CAMERA_FORWARD, static_cast<float>(width) / static_cast<float>(height), PI / 2.0f, 2.0f, glm::length(CAMERA_FORWARD)) {
     m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(-2.0f, 0, 3.0f), 1.0f, std::make_shared<Dielectric>(1.5f)));
     m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(0, 0, 3.0f), 1.0f, std::make_shared<Lambertian>(glm::vec3(1, 0, 0))));
     m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(2.0f, 0, 3.0f), 1.0f, std::make_shared<Metal>(glm::vec3(0.8f, 0.6f, 0.2f), 1.0f)));
 
-    m_scene.add_shape(std::make_shared<Plane>(glm::vec3(0, 1, 0), glm::vec3(0, -1, 0), std::make_shared<Lambertian>(glm::vec3(0.5f, 1, 0.65f))));
+    m_scene.add_shape(std::make_shared<Plane>(glm::vec3(0, 1, 0), glm::vec3(0, -1, 0), std::make_shared<Lambertian>(glm::vec3(0.5f))));
 
     m_rendering_threads.reserve(thread_count);
     split_image(m_work_queue, m_image, DEFAULT_QUAD_SIZE);
