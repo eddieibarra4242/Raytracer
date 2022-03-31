@@ -20,6 +20,8 @@
 #include "shapes/Sphere.h"
 #include "shapes/Plane.h"
 
+#include "materials/Lambertian.h"
+
 constexpr glm::vec3 CAMERA_POSITION = ZERO_VECTOR;
 constexpr glm::vec3 CAMERA_FORWARD {0, 0, 1};
 
@@ -33,9 +35,13 @@ glm::vec3 get_color(const Scene& scene, const Ray& ray, uint32_t bounce_budget) 
     Intersection hit = scene.hit(ray);
 
     if(hit.has_hit) {
-        glm::vec3 target = hit.intersection_point + hit.normal + random_normalized_vector();
-        Ray bounce_ray{hit.intersection_point, normalize(target - hit.intersection_point)};
-        return 0.5f * get_color(scene, bounce_ray, bounce_budget - 1);
+        Scatter scatter = hit.shape->material()->scatter(ray, hit);
+
+        if(scatter.absorbed) {
+            return ZERO_VECTOR;
+        }
+
+        return scatter.attenuation * get_color(scene, scatter.scattered_ray, bounce_budget - 1);
     }
 
     return Ray::sky_color(ray);
@@ -55,8 +61,8 @@ void split_image(std::queue<Quad>& queue, const Bitmap& image, uint32_t quad_siz
 Renderer::Renderer(uint32_t width, uint32_t height, size_t thread_count) :
     m_image(width, height),
     m_camera(CAMERA_POSITION, CAMERA_FORWARD, static_cast<float>(width) / static_cast<float>(height), 1.0f) {
-    m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(0, 0, 2.0f), 1.0f));
-    m_scene.add_shape(std::make_shared<Plane>(glm::vec3(0, 1, 0), glm::vec3(0, -1, 0)));
+    m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(0, 0, 2.0f), 1.0f, std::make_shared<Lambertian>(glm::vec3(1, 0, 0))));
+    m_scene.add_shape(std::make_shared<Plane>(glm::vec3(0, 1, 0), glm::vec3(0, -1, 0), std::make_shared<Lambertian>(glm::vec3(0, 1, 0))));
 
     m_rendering_threads.reserve(thread_count);
     split_image(m_work_queue, m_image, DEFAULT_QUAD_SIZE);

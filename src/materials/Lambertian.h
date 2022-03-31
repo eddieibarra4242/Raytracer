@@ -16,22 +16,13 @@
 
 #pragma once
 
-#include <memory>
-#include <utility>
+#include "Material.h"
 
-#include "../Ray.h"
-#include "../materials/Material.h"
-
-class Shape
-{
+class Lambertian : public Material {
 public:
-    explicit Shape(std::shared_ptr<Material>  material) : m_material{std::move(material)} { }
-    virtual ~Shape() = default;
+    explicit Lambertian(const glm::vec3& albedo) : m_albedo(albedo) { }
 
-    [[nodiscard]] virtual glm::vec3 normal(const glm::vec3& point) = 0;
-    [[nodiscard]] virtual float intersect(const Ray& ray) = 0;
-
-    [[nodiscard]] inline std::shared_ptr<Material> material() const { return m_material; }
+    [[nodiscard]] Scatter scatter(const Ray& incident, const Intersection& intersection) override;
 private:
-    std::shared_ptr<Material> m_material;
+    glm::vec3 m_albedo;
 };

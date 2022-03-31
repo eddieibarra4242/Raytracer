@@ -20,7 +20,7 @@
 
 class Sphere : public Shape {
 public:
-    Sphere(const glm::vec3& position, float radius) : m_position{ position }, m_radius{ radius } { }
+    Sphere(const glm::vec3& position, float radius, const std::shared_ptr<Material>& material) : Shape(material), m_position{ position }, m_radius{ radius } { }
 
     [[nodiscard]] glm::vec3 normal(const glm::vec3& point) override;
     [[nodiscard]] float intersect(const Ray& ray) override;

@@ -14,24 +14,11 @@
    limitations under the License.
 */
 
-#pragma once
+#include "Lambertian.h"
 
-#include <memory>
-#include <utility>
+#include "../Scene.h"
+#include "../vec_utilities.h"
 
-#include "../Ray.h"
-#include "../materials/Material.h"
-
-class Shape
-{
-public:
-    explicit Shape(std::shared_ptr<Material>  material) : m_material{std::move(material)} { }
-    virtual ~Shape() = default;
-
-    [[nodiscard]] virtual glm::vec3 normal(const glm::vec3& point) = 0;
-    [[nodiscard]] virtual float intersect(const Ray& ray) = 0;
-
-    [[nodiscard]] inline std::shared_ptr<Material> material() const { return m_material; }
-private:
-    std::shared_ptr<Material> m_material;
-};
+Scatter Lambertian::scatter(const Ray &incident, const Intersection &intersection) {
+    return {false, m_albedo, Ray{ intersection.intersection_point, normalize(intersection.normal + random_normalized_vector())}};
+}

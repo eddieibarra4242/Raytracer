@@ -16,22 +16,21 @@
 
 #pragma once
 
-#include <memory>
-#include <utility>
-
+#include <glm/glm.hpp>
 #include "../Ray.h"
-#include "../materials/Material.h"
 
-class Shape
+struct Intersection;
+
+struct Scatter
+{
+    bool absorbed;
+    glm::vec3 attenuation;
+    Ray scattered_ray;
+};
+
+class Material
 {
 public:
-    explicit Shape(std::shared_ptr<Material>  material) : m_material{std::move(material)} { }
-    virtual ~Shape() = default;
-
-    [[nodiscard]] virtual glm::vec3 normal(const glm::vec3& point) = 0;
-    [[nodiscard]] virtual float intersect(const Ray& ray) = 0;
-
-    [[nodiscard]] inline std::shared_ptr<Material> material() const { return m_material; }
-private:
-    std::shared_ptr<Material> m_material;
+    virtual ~Material() = default;
+    [[nodiscard]] virtual Scatter scatter(const Ray& incident, const Intersection& intersection) = 0;
 };
