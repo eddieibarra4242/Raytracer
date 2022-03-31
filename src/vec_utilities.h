@@ -41,6 +41,19 @@ constexpr glm::vec3 reflect(const glm::vec3& vector, const glm::vec3& normal) {
     return vector - 2 * dot(vector, normal) * normal;
 }
 
+constexpr glm::vec3 refract(const glm::vec3& incident, const glm::vec3& normal, float refraction_index) {
+    auto cos_theta = dot(-incident, normal); //since both are normalized, range should be [-1, 1].
+    glm::vec3 refract_perpendicular = refraction_index * (incident + cos_theta * normal);
+    glm::vec3 refract_parallel = -sqrtf(fabsf(1.0f - distance_sq(refract_perpendicular))) * normal;
+    return normalize(refract_perpendicular + refract_parallel);
+}
+
+constexpr glm::vec3 refract(const glm::vec3& incident, const glm::vec3& normal, float refraction_index, float cos_theta) {
+    glm::vec3 refract_perpendicular = refraction_index * (incident + cos_theta * normal);
+    glm::vec3 refract_parallel = -sqrtf(fabsf(1.0f - distance_sq(refract_perpendicular))) * normal;
+    return normalize(refract_perpendicular + refract_parallel);
+}
+
 constexpr uint32_t min(uint32_t a, uint32_t b) {
     return a < b ? a : b;
 }

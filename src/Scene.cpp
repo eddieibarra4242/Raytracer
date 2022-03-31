@@ -33,8 +33,10 @@ Intersection Scene::hit(const Ray &ray) const {
 
     if(index < m_shapes.size()) {
         glm::vec3 intersection_point = ray.origin + (ray.direction * min_t);
-        return Intersection { true, min_t, intersection_point, m_shapes[index]->normal(intersection_point), m_shapes[index] };
+        glm::vec3 normal = m_shapes[index]->normal(intersection_point);
+        bool front_face = dot(ray.direction, normal) <= 0;
+        return Intersection { true, front_face, min_t, intersection_point, (front_face ? 1.0f : -1.0f) * normal, m_shapes[index] };
     }
 
-    return Intersection { false, -1.0f, ZERO_VECTOR, ZERO_VECTOR, std::shared_ptr<Shape>{ } };
+    return Intersection { false, false, -1.0f, ZERO_VECTOR, ZERO_VECTOR, std::shared_ptr<Shape>{ } };
 }

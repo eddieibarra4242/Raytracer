@@ -22,9 +22,10 @@
 
 #include "materials/Lambertian.h"
 #include "materials/Metal.h"
+#include "materials/Dielectric.h"
 
-constexpr glm::vec3 CAMERA_POSITION = ZERO_VECTOR;
-constexpr glm::vec3 CAMERA_FORWARD {0, 0, 1};
+constexpr glm::vec3 CAMERA_POSITION {-2, 2, 1};
+constexpr glm::vec3 CAMERA_FORWARD = glm::vec3{0, 0, 3} - CAMERA_POSITION;
 
 constexpr uint32_t DEFAULT_QUAD_SIZE = 100;
 
@@ -62,9 +63,9 @@ void split_image(std::queue<Quad>& queue, const Bitmap& image, uint32_t quad_siz
 Renderer::Renderer(uint32_t width, uint32_t height, size_t thread_count) :
     m_image(width, height),
     m_camera(CAMERA_POSITION, CAMERA_FORWARD, static_cast<float>(width) / static_cast<float>(height), 1.0f) {
-    m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(-2.0f, 0, 3.0f), 1.0f, std::make_shared<Metal>(glm::vec3(0.8f), 0.3f)));
+    m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(-2.0f, 0, 3.0f), 1.0f, std::make_shared<Dielectric>(1.5f)));
     m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(0, 0, 3.0f), 1.0f, std::make_shared<Lambertian>(glm::vec3(1, 0, 0))));
-    m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(2.0f, 0, 3.0f), 1.0f, std::make_shared<Metal>(glm::vec3(0.2f, 0.8f, 0.6f), 1.0f)));
+    m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(2.0f, 0, 3.0f), 1.0f, std::make_shared<Metal>(glm::vec3(0.8f, 0.6f, 0.2f), 1.0f)));
 
     m_scene.add_shape(std::make_shared<Plane>(glm::vec3(0, 1, 0), glm::vec3(0, -1, 0), std::make_shared<Lambertian>(glm::vec3(0.5f, 1, 0.65f))));
 

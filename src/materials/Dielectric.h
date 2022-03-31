@@ -16,28 +16,13 @@
 
 #pragma once
 
-#include <memory>
-#include <vector>
+#include "Material.h"
 
-#include "shapes/Shape.h"
-
-struct Intersection
-{
-    bool has_hit;
-    bool front_face;
-    float distance;
-    glm::vec3 intersection_point;
-    glm::vec3 normal;
-    std::shared_ptr<Shape> shape;
-};
-
-class Scene {
+class Dielectric : public Material {
 public:
-    Scene() = default;
+    explicit Dielectric(float refraction_index) : m_refraction_index{ refraction_index } { }
 
-    inline void add_shape(const std::shared_ptr<Shape>& shape) { m_shapes.push_back(shape); }
-
-    [[nodiscard]] Intersection hit(const Ray& ray) const;
+    [[nodiscard]] Scatter scatter(const Ray& incident, const Intersection& intersection) const override;
 private:
-    std::vector<std::shared_ptr<Shape>> m_shapes;
+    float m_refraction_index;
 };
