@@ -15,56 +15,17 @@
 */
 
 #include "Window.h"
-#include "Bitmap.h"
-
-#include "Ray.h"
-#include "Camera.h"
-
-#include "shapes/Sphere.h"
-#include "shapes/Plane.h"
-#include "Scene.h"
-
-#include <glm/glm.hpp>
-
-#include "vec_utilities.h"
+#include "Renderer.h"
 
 int main()
 {
-    Window window(1280, 720, "Raytracer");
-    Bitmap frame (1280, 720);
+    static constexpr uint32_t WIDTH = 1280;
+    static constexpr uint32_t HEIGHT = 720;
 
-    auto aspect_ratio = static_cast<float>(frame.width()) / static_cast<float>(frame.height());
+    Window window(WIDTH, HEIGHT, "Raytracer");
+    Renderer renderer(WIDTH, HEIGHT);
 
-    uint32_t samples = 10;
-
-    Camera camera{glm::vec3(0, 0, 0), glm::vec3(0, 0, 1), aspect_ratio, 1.0f};
-
-    Scene scene;
-    scene.add_shape(std::make_shared<Sphere>(glm::vec3(0, 0, 2.0f), 1.0f));
-    scene.add_shape(std::make_shared<Plane>(glm::vec3(0, 1, 0), glm::vec3(0, -1, 0)));
-
-    for(uint32_t y = 0; y < frame.height(); y++) {
-        for(uint32_t x = 0; x < frame.width(); x++) {
-            glm::vec3 color {0, 0, 0};
-
-            for(uint32_t sample = 0; sample < samples; sample++) {
-                auto u = (static_cast<float>(x) + random_float()) / static_cast<float>(frame.width() - 1);
-                auto v = (static_cast<float>(y) + random_float()) / static_cast<float>(frame.height() - 1);
-                Ray r = camera.to_ray(u, v);
-
-                Intersection hit = scene.hit(r);
-
-                if(hit.has_hit) {
-                    color += glm::abs(hit.normal);
-                } else {
-                    color += Ray::sky_color(r);
-                }
-            }
-
-            color *= (1.0f / static_cast<float>(samples));
-            frame.draw(x, y, Color::to_color(color));
-        }
-    }
+    renderer.start_render();
 
     glClearColor(1, 0, 0, 1);
 
@@ -73,8 +34,10 @@ int main()
 
         glClear(GL_COLOR_BUFFER_BIT);
 
-        frame.renderWithGL();
+        renderer.present();
 
         window.present();
     }
+
+    renderer.stop_render();
 }
