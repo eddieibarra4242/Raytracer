@@ -15,12 +15,11 @@
 */
 
 #include "Plane.h"
-#include "../vec_utilities.h"
 
 float Plane::intersect(const Ray &ray) {
     float denominator = dot(m_normal, ray.direction);
 
-    if (denominator > EPSILON || denominator < -EPSILON) {
+    if (std::abs(denominator) > EPSILON) {
         glm::vec3 to_point = m_point - ray.origin;
         return dot(to_point, m_normal) / denominator;
     }

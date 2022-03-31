@@ -32,6 +32,11 @@ constexpr float distance_sq(const glm::vec3& v) {
     return v.x * v.x + v.y * v.y + v.z * v.z;
 }
 
+constexpr glm::vec3 normalize(const glm::vec3& v) {
+    float length = sqrtf(distance_sq(v));
+    return glm::vec3{v.x / length, v.y / length, v.z / length};
+}
+
 constexpr uint32_t min(uint32_t a, uint32_t b) {
     return a < b ? a : b;
 }
@@ -47,7 +52,7 @@ inline float random_float(float min, float max) {
 }
 
 inline glm::vec3 random_normalized_vector() {
-    return glm::normalize(glm::vec3 {random_float(-1.0f, 1.0f), random_float(-1.0f, 1.0f), random_float(-1.0f, 1.0f)});
+    return normalize(glm::vec3 {random_float(-1.0f, 1.0f), random_float(-1.0f, 1.0f), random_float(-1.0f, 1.0f)});
 }
 
 inline glm::vec3 random_from_hemisphere(const glm::vec3& normal) {

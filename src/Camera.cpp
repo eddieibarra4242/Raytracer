@@ -15,15 +15,16 @@
 */
 
 #include "Camera.h"
+#include "vec_utilities.h"
 
 constexpr float VIEW_PORT_HEIGHT = 2.0f;
 
 Camera::Camera(const glm::vec3 &position, const glm::vec3 &forward, float aspect_ratio, float focal_length) :
     m_position{ position },
-    m_forward{ glm::normalize(forward) } {
+    m_forward{ normalize(forward) } {
     static constexpr auto UP = glm::vec3 (0, 1, 0);
-    m_right = glm::normalize(glm::cross(m_forward, UP));
-    m_up = glm::normalize(glm::cross(m_right, m_forward));
+    m_right = normalize(glm::cross(m_forward, UP));
+    m_up = normalize(glm::cross(m_right, m_forward));
 
     m_horizontal = m_right * VIEW_PORT_HEIGHT * aspect_ratio;
     m_vertical = m_up * VIEW_PORT_HEIGHT;
@@ -31,5 +32,5 @@ Camera::Camera(const glm::vec3 &position, const glm::vec3 &forward, float aspect
 }
 
 Ray Camera::to_ray(float x, float y) {
-    return Ray{m_position, glm::normalize(m_top_left + x * m_horizontal - y * m_vertical)};
+    return Ray{m_position, normalize(m_top_left + x * m_horizontal - y * m_vertical)};
 }

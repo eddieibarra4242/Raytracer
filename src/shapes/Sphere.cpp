@@ -41,5 +41,5 @@ float Sphere::intersect(const Ray &ray) {
 }
 
 glm::vec3 Sphere::normal(const glm::vec3 &point) {
-    return glm::normalize(point - m_position);
+    return normalize(point - m_position);
 }
