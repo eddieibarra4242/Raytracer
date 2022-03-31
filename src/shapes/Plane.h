@@ -22,6 +22,7 @@ class Plane : public Shape {
 public:
     Plane(const glm::vec3& normal, const glm::vec3& point): m_normal{ glm::normalize(normal) }, m_point{ point } { }
 
+    [[nodiscard]] glm::vec3 normal(const glm::vec3& point) override;
     [[nodiscard]] float intersect(const Ray &ray) override;
 private:
     glm::vec3 m_normal;

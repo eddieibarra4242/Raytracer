@@ -22,5 +22,7 @@ class Shape
 {
 public:
     virtual ~Shape() = default;
+
+    [[nodiscard]] virtual glm::vec3 normal(const glm::vec3& point) = 0;
     [[nodiscard]] virtual float intersect(const Ray& ray) = 0;
 };

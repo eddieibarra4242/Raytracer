@@ -39,3 +39,7 @@ float Sphere::intersect(const Ray &ray) {
 
     return t1;
 }
+
+glm::vec3 Sphere::normal(const glm::vec3 &point) {
+    return glm::normalize(point - m_position);
+}

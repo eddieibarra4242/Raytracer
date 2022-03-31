@@ -25,6 +25,7 @@ struct Intersection
 {
     bool has_hit;
     float distance;
+    glm::vec3 normal;
     std::shared_ptr<Shape> shape;
 };
 
