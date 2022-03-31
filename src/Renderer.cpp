@@ -33,7 +33,8 @@ glm::vec3 get_color(const Scene& scene, const Ray& ray, uint32_t bounce_budget) 
     Intersection hit = scene.hit(ray);
 
     if(hit.has_hit) {
-        return glm::abs(hit.normal);
+        Ray bounce_ray{hit.intersection_point, random_from_hemisphere(hit.normal)};
+        return 0.5f * get_color(scene, bounce_ray, bounce_budget - 1);
     }
 
     return Ray::sky_color(ray);
@@ -101,8 +102,6 @@ void Renderer::start_render() {
     for(size_t i = 0; i < m_rendering_threads.capacity(); i++) {
         m_rendering_threads.emplace_back(render_func);
     }
-
-    //m_rendering_thread = std::make_unique<std::thread>(render_func);
 }
 
 void Renderer::stop_render() {
