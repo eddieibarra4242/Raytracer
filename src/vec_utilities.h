@@ -21,6 +21,8 @@
 
 constexpr float EPSILON = 1e-6f;
 
+constexpr glm::vec3 ZERO_VECTOR{0, 0, 0};
+
 //glm::dot is too slow to for ray-shape intersections
 constexpr float dot(const glm::vec3& v1, const glm::vec3& v2) {
     return v1.x * v2.x + v1.y * v2.y + v1.z * v2.z;
@@ -32,7 +34,7 @@ constexpr float distance_sq(const glm::vec3& v) {
 
 inline float random_float() {
     static std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
-    static std::mt19937 generator;
+    static std::default_random_engine generator;
     return distribution(generator);
 }
 
@@ -41,7 +43,7 @@ inline float random_float(float min, float max) {
 }
 
 inline glm::vec3 random_normalized_vector() {
-    return glm::normalize(glm::vec3 {random_float(), random_float(), random_float()});
+    return glm::normalize(glm::vec3 {random_float(-1.0f, 1.0f), random_float(-1.0f, 1.0f), random_float(-1.0f, 1.0f)});
 }
 
 inline glm::vec3 random_from_hemisphere(const glm::vec3& normal) {
