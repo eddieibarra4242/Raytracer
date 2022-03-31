@@ -22,7 +22,7 @@ class Lambertian : public Material {
 public:
     explicit Lambertian(const glm::vec3& albedo) : m_albedo(albedo) { }
 
-    [[nodiscard]] Scatter scatter(const Ray& incident, const Intersection& intersection) override;
+    [[nodiscard]] Scatter scatter(const Ray& incident, const Intersection& intersection) const override;
 private:
     glm::vec3 m_albedo;
 };

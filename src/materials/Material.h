@@ -32,5 +32,5 @@ class Material
 {
 public:
     virtual ~Material() = default;
-    [[nodiscard]] virtual Scatter scatter(const Ray& incident, const Intersection& intersection) = 0;
+    [[nodiscard]] virtual Scatter scatter(const Ray& incident, const Intersection& intersection) const = 0;
 };
