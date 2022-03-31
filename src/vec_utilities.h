@@ -37,6 +37,10 @@ constexpr glm::vec3 normalize(const glm::vec3& v) {
     return glm::vec3{v.x / length, v.y / length, v.z / length};
 }
 
+constexpr glm::vec3 reflect(const glm::vec3& vector, const glm::vec3& normal) {
+    return vector - 2 * dot(vector, normal) * normal;
+}
+
 constexpr uint32_t min(uint32_t a, uint32_t b) {
     return a < b ? a : b;
 }
