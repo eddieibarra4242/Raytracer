@@ -16,6 +16,8 @@
 
 #include "Scene.h"
 
+#include "vec_utilities.h"
+
 Intersection Scene::hit(const Ray &ray) const {
     float min_t = std::numeric_limits<float>::max();
     size_t index = m_shapes.size();
@@ -30,8 +32,9 @@ Intersection Scene::hit(const Ray &ray) const {
     }
 
     if(index < m_shapes.size()) {
-        return Intersection { true, min_t, m_shapes[index]->normal(ray.origin + (ray.direction * min_t)), m_shapes[index] };
+        glm::vec3 intersection_point = ray.origin + (ray.direction * min_t);
+        return Intersection { true, min_t, intersection_point, m_shapes[index]->normal(intersection_point), m_shapes[index] };
     }
 
-    return Intersection { false, -1.0f, glm::vec3{0, 0, 0}, std::shared_ptr<Shape>{ } };
+    return Intersection { false, -1.0f, ZERO_VECTOR, ZERO_VECTOR, std::shared_ptr<Shape>{ } };
 }
