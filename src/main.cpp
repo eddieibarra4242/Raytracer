@@ -20,12 +20,13 @@
 #include "Ray.h"
 #include "Camera.h"
 
-#include "shapes/Shape.h"
 #include "shapes/Sphere.h"
 #include "shapes/Plane.h"
 #include "Scene.h"
 
 #include <glm/glm.hpp>
+
+#include "vec_utilities.h"
 
 int main()
 {
@@ -33,6 +34,8 @@ int main()
     Bitmap frame (1280, 720);
 
     auto aspect_ratio = static_cast<float>(frame.width()) / static_cast<float>(frame.height());
+
+    uint32_t samples = 10;
 
     Camera camera{glm::vec3(0, 0, 0), glm::vec3(0, 0, 1), aspect_ratio, 1.0f};
 
@@ -42,21 +45,24 @@ int main()
 
     for(uint32_t y = 0; y < frame.height(); y++) {
         for(uint32_t x = 0; x < frame.width(); x++) {
-            auto u = static_cast<float>(x) / static_cast<float>(frame.width() - 1);
-            auto v = static_cast<float>(y) / static_cast<float>(frame.height() - 1);
-            Ray r = camera.to_ray(u, v);
+            glm::vec3 color {0, 0, 0};
 
-            glm::vec3 color = Ray::sky_color(r) * 255.0f;
-            Color pixel_color{static_cast<uint8_t>(color.r), static_cast<uint8_t>(color.g), static_cast<uint8_t>(color.b), 255};
+            for(uint32_t sample = 0; sample < samples; sample++) {
+                auto u = (static_cast<float>(x) + random_float()) / static_cast<float>(frame.width() - 1);
+                auto v = (static_cast<float>(y) + random_float()) / static_cast<float>(frame.height() - 1);
+                Ray r = camera.to_ray(u, v);
 
-            Intersection hit = scene.hit(r);
+                Intersection hit = scene.hit(r);
 
-            if(hit.has_hit) {
-                auto blue = static_cast<uint8_t>((u + v) * 0.5f * 255.0f);
-                pixel_color = {0, 0, blue, 255};
+                if(hit.has_hit) {
+                    color += glm::abs(hit.normal);
+                } else {
+                    color += Ray::sky_color(r);
+                }
             }
 
-            frame.draw(x, y, pixel_color);
+            color *= (1.0f / static_cast<float>(samples));
+            frame.draw(x, y, Color::to_color(color));
         }
     }
 

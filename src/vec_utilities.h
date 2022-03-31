@@ -16,6 +16,7 @@
 
 #pragma once
 
+#include <random>
 #include <glm/glm.hpp>
 
 constexpr float EPSILON = 1e-6f;
@@ -27,4 +28,28 @@ constexpr float dot(const glm::vec3& v1, const glm::vec3& v2) {
 
 constexpr float distance_sq(const glm::vec3& v) {
     return v.x * v.x + v.y * v.y + v.z * v.z;
+}
+
+inline float random_float() {
+    static std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
+    static std::mt19937 generator;
+    return distribution(generator);
+}
+
+inline float random_float(float min, float max) {
+    return (random_float() * (max - min)) + min;
+}
+
+inline glm::vec3 random_normalized_vector() {
+    return glm::normalize(glm::vec3 {random_float(), random_float(), random_float()});
+}
+
+inline glm::vec3 random_from_hemisphere(const glm::vec3& normal) {
+    glm::vec3 vec = random_normalized_vector();
+
+    if(dot(vec, normal) < 0) {
+        return vec * -1.0f;
+    }
+
+    return vec;
 }
