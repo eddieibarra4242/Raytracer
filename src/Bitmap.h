@@ -20,6 +20,8 @@
 #include <glm/glm.hpp>
 #include <GL/glew.h>
 
+constexpr float GAMMA = 2.2f;
+
 struct Color {
     uint8_t m_red;
     uint8_t m_green;
@@ -30,7 +32,7 @@ struct Color {
     constexpr Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) : m_red{ red }, m_green{ green }, m_blue{ blue }, m_alpha{ alpha } {}
 
     static constexpr Color to_color(const glm::vec3& color) {
-        glm::vec3 ranged_color = glm::clamp(color, 0.0f, 1.0f) * 255.0f;
+        glm::vec3 ranged_color = glm::clamp(glm::pow(color, glm::vec3(1.0f / GAMMA)), 0.0f, 1.0f) * 255.0f;
         return Color{static_cast<uint8_t>(ranged_color.r), static_cast<uint8_t>(ranged_color.g), static_cast<uint8_t>(ranged_color.b), 255};
     }
 };
