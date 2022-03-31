@@ -23,8 +23,8 @@ Camera::Camera(const glm::vec3 &position, const glm::vec3 &forward, float aspect
     m_position{ position },
     m_forward{ normalize(forward) } {
     static constexpr auto UP = glm::vec3 (0, 1, 0);
-    m_right = normalize(glm::cross(m_forward, UP));
-    m_up = normalize(glm::cross(m_right, m_forward));
+    m_right = normalize(glm::cross(UP, m_forward));
+    m_up = normalize(glm::cross(m_forward, m_right));
 
     m_horizontal = m_right * VIEW_PORT_HEIGHT * aspect_ratio;
     m_vertical = m_up * VIEW_PORT_HEIGHT;
