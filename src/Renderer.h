@@ -35,6 +35,8 @@ private:
     static constexpr uint32_t samples = 100;
     static constexpr uint32_t max_bounces = 16;
 
+    bool m_should_stop = false;
+
     Bitmap m_image;
 
     Scene m_scene;

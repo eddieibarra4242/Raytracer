@@ -52,6 +52,10 @@ void Renderer::start_render() {
                 glm::vec3 color {0, 0, 0};
 
                 for(uint32_t sample = 0; sample < samples; sample++) {
+                    if(m_should_stop) {
+                        return;
+                    }
+
                     auto u = (static_cast<float>(x) + random_float()) / static_cast<float>(m_image.width() - 1);
                     auto v = (static_cast<float>(y) + random_float()) / static_cast<float>(m_image.height() - 1);
                     Ray r = m_camera.to_ray(u, v);
@@ -72,6 +76,7 @@ void Renderer::stop_render() {
         return;
     }
 
+    m_should_stop = true;
     m_rendering_thread->join();
 }
 
