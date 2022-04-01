@@ -36,14 +36,14 @@ struct Quad
 
 class Renderer {
 public:
-    Renderer(uint32_t width, uint32_t height) : Renderer(width, height, 1) { }
+    Renderer(uint32_t width, uint32_t height) : Renderer(width, height, std::thread::hardware_concurrency()) { }
     explicit Renderer(uint32_t width, uint32_t height, size_t thread_count);
 
     void start_render();
     void stop_render();
     void present();
 private:
-    static constexpr uint32_t samples = 1;
+    static constexpr uint32_t samples = 256;
     static constexpr uint32_t max_bounces = 16;
 
     bool m_should_stop = false;
