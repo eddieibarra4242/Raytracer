@@ -28,22 +28,22 @@
 struct Quad
 {
     using vec2i = glm::vec<2, uint32_t, glm::defaultp>;
-    vec2i min;
-    vec2i max;
+    vec2i m_min;
+    vec2i m_max;
 
-    Quad(const vec2i& min, const vec2i& max) : min(min), max(max) { }
+    Quad(const vec2i& min, const vec2i& max) : m_min(min), m_max(max) { }
 };
 
 class Renderer {
 public:
-    Renderer(uint32_t width, uint32_t height) : Renderer(width, height, std::thread::hardware_concurrency()) { }
+    Renderer(uint32_t width, uint32_t height) : Renderer(width, height, 1) { }
     explicit Renderer(uint32_t width, uint32_t height, size_t thread_count);
 
     void start_render();
     void stop_render();
     void present();
 private:
-    static constexpr uint32_t samples = 100;
+    static constexpr uint32_t samples = 1;
     static constexpr uint32_t max_bounces = 16;
 
     bool m_should_stop = false;

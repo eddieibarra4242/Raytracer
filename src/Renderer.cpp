@@ -72,17 +72,17 @@ Renderer::Renderer(uint32_t width, uint32_t height, size_t thread_count) :
     for (int a = -11; a < 11; a++) {
         for (int b = -11; b < 11; b++) {
             auto choose_mat = random_float();
-            glm::vec3 center(a + 0.9*random_float(), 0.2, b + 0.9*random_float());
+            glm::vec3 center(static_cast<float>(a) + 0.9f * random_float(), 0.2f, static_cast<float>(b) + 0.9f * random_float());
 
-            if ((center - glm::vec3(4, 0.2, 0)).length() > 0.9) {
+            if (glm::length(center - glm::vec3(4, 0.2f, 0)) > 0.9f) {
                 std::shared_ptr<Material> sphere_material;
 
-                if (choose_mat < 0.8) {
+                if (choose_mat < 0.8f) {
                     // diffuse
                     auto albedo = random_color() * random_color();
                     sphere_material = std::make_shared<Lambertian>(albedo);
                     m_scene.add_shape(std::make_shared<Sphere>(center, 0.2f, sphere_material));
-                } else if (choose_mat < 0.95) {
+                } else if (choose_mat < 0.95f) {
                     // metal
                     auto albedo = random_color(0.5f, 1);
                     auto fuzz = random_float(0, 0.5f);
@@ -97,13 +97,13 @@ Renderer::Renderer(uint32_t width, uint32_t height, size_t thread_count) :
         }
     }
 
-    auto material1 = std::make_shared<Dielectric>(1.5);
+    auto material1 = std::make_shared<Dielectric>(1.5f);
     m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(0, 1, 0), 1.0f, material1));
 
-    auto material2 = std::make_shared<Lambertian>(glm::vec3 (0.4, 0.2, 0.1));
+    auto material2 = std::make_shared<Lambertian>(glm::vec3 (0.4f, 0.2f, 0.1f));
     m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(4, 1, 0), 1.0f, material2));
 
-    auto material3 = std::make_shared<Metal>(glm::vec3(0.7, 0.6, 0.5), 0.0);
+    auto material3 = std::make_shared<Metal>(glm::vec3(0.7f, 0.6f, 0.5f), 0.0f);
     m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(-4, 1, 0), 1.0f, material3));
 
     m_rendering_threads.reserve(thread_count);
@@ -126,8 +126,8 @@ void Renderer::start_render() {
                 m_work_queue.pop();
             }
 
-            for (uint32_t y = q.min.y; y < q.max.y; y++) {
-                for (uint32_t x = q.min.x; x < q.max.x; x++) {
+            for (uint32_t y = q.m_min.y; y < q.m_max.y; y++) {
+                for (uint32_t x = q.m_min.x; x < q.m_max.x; x++) {
                     glm::vec3 color{0, 0, 0};
 
                     for (uint32_t sample = 0; sample < samples; sample++) {

@@ -19,6 +19,6 @@
 #include "../Scene.h"
 #include "../vec_utilities.h"
 
-Scatter Lambertian::scatter(const Ray &incident, const Intersection &intersection) const {
+Scatter Lambertian::scatter([[maybe_unused]] const Ray &incident, const Intersection &intersection) const {
     return {false, m_albedo, Ray{ intersection.intersection_point, normalize(intersection.normal + random_normalized_vector())}};
 }

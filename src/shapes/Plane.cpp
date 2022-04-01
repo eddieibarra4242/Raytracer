@@ -27,6 +27,6 @@ float Plane::intersect(const Ray &ray) {
     return -1;
 }
 
-glm::vec3 Plane::normal(const glm::vec3 &point) {
+glm::vec3 Plane::normal([[maybe_unused]] const glm::vec3 &point) {
     return m_normal;
 }

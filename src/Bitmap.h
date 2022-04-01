@@ -31,7 +31,7 @@ struct Color {
     constexpr Color() = default;
     constexpr Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha) : m_red{ red }, m_green{ green }, m_blue{ blue }, m_alpha{ alpha } {}
 
-    static constexpr Color to_color(const glm::vec3& color) {
+    static inline Color to_color(const glm::vec3& color) {
         glm::vec3 ranged_color = glm::clamp(glm::pow(color, glm::vec3(1.0f / GAMMA)), 0.0f, 1.0f) * 255.0f;
         return Color{static_cast<uint8_t>(ranged_color.r), static_cast<uint8_t>(ranged_color.g), static_cast<uint8_t>(ranged_color.b), 255};
     }
@@ -42,12 +42,12 @@ public:
     Bitmap(uint32_t width, uint32_t height);
     ~Bitmap();
 
-    constexpr void draw(uint32_t x, uint32_t y, Color value) {
+    inline void draw(uint32_t x, uint32_t y, Color value) {
         m_has_changed = true;
         get_wrapped(x, y) = value;
     }
 
-    [[nodiscard]] constexpr Color read(uint32_t x, uint32_t y) const { return get_wrapped(x, y); }
+    [[nodiscard]] inline Color read(uint32_t x, uint32_t y) const { return get_wrapped(x, y); }
 
     [[nodiscard]] constexpr uint32_t width() const { return m_width; }
     [[nodiscard]] constexpr uint32_t height() const { return m_height; }
@@ -61,13 +61,13 @@ private:
     bool m_has_changed;
     GLuint m_texture_id{};
 
-    [[nodiscard]] constexpr Color& get_wrapped(uint32_t x, uint32_t y) {
+    [[nodiscard]] inline Color& get_wrapped(uint32_t x, uint32_t y) {
         uint32_t x_wrapped = x % m_width;
         uint32_t y_wrapped = y % m_height;
         return m_pixels.get()[x_wrapped + y_wrapped * m_width];
     }
 
-    [[nodiscard]] constexpr const Color& get_wrapped(uint32_t x, uint32_t y) const {
+    [[nodiscard]] inline const Color& get_wrapped(uint32_t x, uint32_t y) const {
         uint32_t x_wrapped = x % m_width;
         uint32_t y_wrapped = y % m_height;
         return m_pixels.get()[x_wrapped + y_wrapped * m_width];
