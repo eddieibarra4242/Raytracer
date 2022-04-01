@@ -17,13 +17,15 @@
 #include "Camera.h"
 #include "vec_utilities.h"
 
+constexpr float VIEW_PORT_HEIGHT = 2.2f;
+
 Camera::Camera(const glm::vec3 &position, const glm::vec3 &forward, float aspect_ratio, float fov, float aperture, float focal_length) :
     m_position{ position },
     m_forward{ normalize(forward) },
     m_lens_radius{ aperture / 2.0f },
     m_focal_length{ focal_length } {
 
-    float view_port_height = 2.0f * m_focal_length * tanf(fov / 2.0f);
+    float view_port_height = 2.0f * VIEW_PORT_HEIGHT * tanf(fov / 2.0f);
     float view_port_width = view_port_height * aspect_ratio;
 
     static constexpr auto UP = glm::vec3 (0, 1, 0);

@@ -24,8 +24,8 @@
 #include "materials/Metal.h"
 #include "materials/Dielectric.h"
 
-constexpr glm::vec3 CAMERA_POSITION {-2, 2, 1};
-constexpr glm::vec3 CAMERA_FORWARD = glm::vec3{0, 0, 3} - CAMERA_POSITION;
+constexpr glm::vec3 CAMERA_POSITION {-13, 2, 3};
+constexpr glm::vec3 CAMERA_FORWARD = glm::vec3{0, 0, 0} - CAMERA_POSITION;
 
 constexpr uint32_t DEFAULT_QUAD_SIZE = 100;
 
@@ -64,12 +64,47 @@ void split_image(std::queue<Quad>& queue, const Bitmap& image, uint32_t quad_siz
 
 Renderer::Renderer(uint32_t width, uint32_t height, size_t thread_count) :
     m_image(width, height),
-    m_camera(CAMERA_POSITION, CAMERA_FORWARD, static_cast<float>(width) / static_cast<float>(height), PI / 2.0f, 2.0f, glm::length(CAMERA_FORWARD)) {
-    m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(-2.0f, 0, 3.0f), 1.0f, std::make_shared<Dielectric>(1.5f)));
-    m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(0, 0, 3.0f), 1.0f, std::make_shared<Lambertian>(glm::vec3(1, 0, 0))));
-    m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(2.0f, 0, 3.0f), 1.0f, std::make_shared<Metal>(glm::vec3(0.8f, 0.6f, 0.2f), 1.0f)));
+    m_camera(CAMERA_POSITION, CAMERA_FORWARD, static_cast<float>(width) / static_cast<float>(height), PI / 2.0f, 0.1f, 10.0f) {
 
-    m_scene.add_shape(std::make_shared<Plane>(glm::vec3(0, 1, 0), glm::vec3(0, -1, 0), std::make_shared<Lambertian>(glm::vec3(0.5f))));
+    auto ground_material = std::make_shared<Lambertian>(glm::vec3(0.5));
+    m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(0,-1000,0), 1000, ground_material));
+
+    for (int a = -11; a < 11; a++) {
+        for (int b = -11; b < 11; b++) {
+            auto choose_mat = random_float();
+            glm::vec3 center(a + 0.9*random_float(), 0.2, b + 0.9*random_float());
+
+            if ((center - glm::vec3(4, 0.2, 0)).length() > 0.9) {
+                std::shared_ptr<Material> sphere_material;
+
+                if (choose_mat < 0.8) {
+                    // diffuse
+                    auto albedo = random_color() * random_color();
+                    sphere_material = std::make_shared<Lambertian>(albedo);
+                    m_scene.add_shape(std::make_shared<Sphere>(center, 0.2f, sphere_material));
+                } else if (choose_mat < 0.95) {
+                    // metal
+                    auto albedo = random_color(0.5f, 1);
+                    auto fuzz = random_float(0, 0.5f);
+                    sphere_material = std::make_shared<Metal>(albedo, fuzz);
+                    m_scene.add_shape(std::make_shared<Sphere>(center, 0.2f, sphere_material));
+                } else {
+                    // glass
+                    sphere_material = std::make_shared<Dielectric>(1.5f);
+                    m_scene.add_shape(std::make_shared<Sphere>(center, 0.2f, sphere_material));
+                }
+            }
+        }
+    }
+
+    auto material1 = std::make_shared<Dielectric>(1.5);
+    m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(0, 1, 0), 1.0f, material1));
+
+    auto material2 = std::make_shared<Lambertian>(glm::vec3 (0.4, 0.2, 0.1));
+    m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(4, 1, 0), 1.0f, material2));
+
+    auto material3 = std::make_shared<Metal>(glm::vec3(0.7, 0.6, 0.5), 0.0);
+    m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(-4, 1, 0), 1.0f, material3));
 
     m_rendering_threads.reserve(thread_count);
     split_image(m_work_queue, m_image, DEFAULT_QUAD_SIZE);
