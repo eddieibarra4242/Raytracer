@@ -25,7 +25,7 @@ Intersection Scene::hit(const Ray &ray) const {
     for(size_t i = 0; i < m_shapes.size(); i++) {
         float t = m_shapes[i]->intersect(ray);
 
-        if(t >= EPSILON && t < min_t) {
+        if(t >= T_EPSILON && t < min_t) {
             min_t = t;
             index = i;
         }

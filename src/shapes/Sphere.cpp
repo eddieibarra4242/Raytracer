@@ -33,7 +33,7 @@ float Sphere::intersect(const Ray &ray) {
     auto t1 = (-b - sqrtf(disc)) / (2.0f * a);
     auto t2 = (-b + sqrtf(disc)) / (2.0f * a);
 
-    if(t1 <= 0) {
+    if(t1 < T_EPSILON) {
         return t2;
     }
 

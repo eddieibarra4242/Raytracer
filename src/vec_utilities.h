@@ -20,6 +20,7 @@
 #include <glm/glm.hpp>
 
 constexpr float EPSILON = 1e-6f;
+constexpr float T_EPSILON = 1e-2f;
 
 constexpr glm::vec3 ZERO_VECTOR{0, 0, 0};
 
@@ -60,12 +61,20 @@ constexpr uint32_t min(uint32_t a, uint32_t b) {
 
 inline float random_float() {
     static std::uniform_real_distribution<float> distribution(0.0f, 1.0f);
-    static std::default_random_engine generator;
+    static std::mt19937 generator;
     return distribution(generator);
 }
 
 inline float random_float(float min, float max) {
     return (random_float() * (max - min)) + min;
+}
+
+inline glm::vec3 random_color() {
+    return glm::vec3 {random_float(), random_float(), random_float()};
+}
+
+inline glm::vec3 random_color(float min, float max) {
+    return glm::vec3 {random_float(min, max), random_float(min, max), random_float(min, max)};
 }
 
 inline glm::vec3 random_normalized_vector() {
