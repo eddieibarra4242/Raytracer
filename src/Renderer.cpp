@@ -31,12 +31,12 @@ constexpr uint32_t DEFAULT_QUAD_SIZE = 100;
 
 constexpr float PI = 3.14159265358979323846264338327950288419f;
 
-glm::vec3 get_color(const Scene& scene, const Ray& ray, uint32_t bounce_budget) {
+glm::vec3 get_color(std::vector<std::shared_ptr<Sphere>>& m_spheres, const Scene& scene, const Ray& ray, uint32_t bounce_budget) {
     if(bounce_budget == 0) {
         return ZERO_VECTOR;
     }
 
-    Intersection hit = scene.hit(ray);
+    Intersection hit = scene.hit(m_spheres, ray);
 
     if(hit.has_hit) {
         Scatter scatter = hit.shape->material()->scatter(ray, hit);
@@ -45,7 +45,7 @@ glm::vec3 get_color(const Scene& scene, const Ray& ray, uint32_t bounce_budget) 
             return ZERO_VECTOR;
         }
 
-        return scatter.attenuation * get_color(scene, scatter.scattered_ray, bounce_budget - 1);
+        return scatter.attenuation * get_color(m_spheres, scene, scatter.scattered_ray, bounce_budget - 1);
     }
 
     return Ray::sky_color(ray);
@@ -106,12 +106,16 @@ Renderer::Renderer(uint32_t width, uint32_t height, size_t thread_count) :
     auto material3 = std::make_shared<Metal>(glm::vec3(0.7f, 0.6f, 0.5f), 0.0f);
     m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(-4, 1, 0), 1.0f, material3));
 
+    m_scene.process();
+
     m_rendering_threads.reserve(thread_count);
     split_image(m_work_queue, m_image, DEFAULT_QUAD_SIZE);
 }
 
 void Renderer::start_render() {
     auto render_func = [this]() {
+        std::vector<std::shared_ptr<Sphere>> m_spheres;
+
         while(true) {
             Quad q { ZERO_VECTOR, ZERO_VECTOR };
 
@@ -138,7 +142,7 @@ void Renderer::start_render() {
                         auto u = (static_cast<float>(x) + random_float()) / static_cast<float>(m_image.width() - 1);
                         auto v = (static_cast<float>(y) + random_float()) / static_cast<float>(m_image.height() - 1);
                         Ray r = m_camera.to_ray(u, v);
-                        color += get_color(m_scene, r, max_bounces);
+                        color += get_color(m_spheres, m_scene, r, max_bounces);
                     }
 
                     color *= (1.0f / static_cast<float>(samples));

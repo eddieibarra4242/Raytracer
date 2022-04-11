@@ -16,18 +16,29 @@
 
 #pragma once
 
-#include "Shape.h"
+#include <memory>
+#include <vector>
 
-class Sphere : public Shape {
+#include "../Ray.h"
+#include "../shapes/Sphere.h"
+#include "AABB.h"
+
+struct Node {
+    std::unique_ptr<Node> m_left;
+    std::unique_ptr<Node> m_right;
+    AABB m_boundingBox;
+    std::vector<std::shared_ptr<Sphere>> m_spheres;
+};
+
+class BVH {
 public:
-    Sphere(const glm::vec3& position, float radius, const std::shared_ptr<Material>& material) : Shape(material), m_position{ position }, m_radius{ radius } { }
+    BVH() = default;
 
-    [[nodiscard]] glm::vec3 normal(const glm::vec3& point) override;
-    [[nodiscard]] float intersect(const Ray& ray) override;
+    void add(const std::shared_ptr<Sphere>& s);
+    void process();
 
-    [[nodiscard]] constexpr glm::vec3 position() const { return m_position; };
-    [[nodiscard]] constexpr float radius() const { return m_radius; };
+    void coarseIntersect(std::vector<std::shared_ptr<Sphere>>& potiential_spheres, const Ray& ray) const;
 private:
-    glm::vec3 m_position;
-    float m_radius;
+    static constexpr int MAX_SPHERES = 5;
+    Node m_root;
 };

@@ -16,18 +16,24 @@
 
 #pragma once
 
-#include "Shape.h"
+#include <glm/glm.hpp>
 
-class Sphere : public Shape {
+#include "../shapes/Sphere.h"
+#include "../Ray.h"
+
+class AABB {
 public:
-    Sphere(const glm::vec3& position, float radius, const std::shared_ptr<Material>& material) : Shape(material), m_position{ position }, m_radius{ radius } { }
+    AABB() = default;
+    AABB(glm::vec3 corner1, glm::vec3 corner2) : m_min(glm::min(corner1, corner2)), m_max(glm::max(corner1, corner2)) { }
 
-    [[nodiscard]] glm::vec3 normal(const glm::vec3& point) override;
-    [[nodiscard]] float intersect(const Ray& ray) override;
+    [[nodiscard]] bool intersect(const Ray& ray) const;
 
-    [[nodiscard]] constexpr glm::vec3 position() const { return m_position; };
-    [[nodiscard]] constexpr float radius() const { return m_radius; };
+    void fit(const Sphere& s);
+
+    [[nodiscard]] constexpr glm::vec3 min() const { return m_min; }
+    [[nodiscard]] constexpr glm::vec3 max() const { return m_max; }
+
 private:
-    glm::vec3 m_position;
-    float m_radius;
+    glm::vec3 m_min;
+    glm::vec3 m_max;
 };

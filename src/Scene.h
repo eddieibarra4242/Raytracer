@@ -20,6 +20,7 @@
 #include <vector>
 
 #include "shapes/Shape.h"
+#include "sas/BVH.h"
 
 struct Intersection
 {
@@ -35,9 +36,11 @@ class Scene {
 public:
     Scene() = default;
 
-    inline void add_shape(const std::shared_ptr<Shape>& shape) { m_shapes.push_back(shape); }
+    inline void add_shape(const std::shared_ptr<Sphere>& sphere) { bvh.add(sphere); }
 
-    [[nodiscard]] Intersection hit(const Ray& ray) const;
+    inline void process() { bvh.process(); }
+
+    [[nodiscard]] Intersection hit(std::vector<std::shared_ptr<Sphere>>& m_spheres, const Ray& ray) const;
 private:
-    std::vector<std::shared_ptr<Shape>> m_shapes;
+    BVH bvh;
 };
