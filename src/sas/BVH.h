@@ -37,7 +37,7 @@ public:
     void add(const std::shared_ptr<Sphere>& s);
     void process();
 
-    void coarseIntersect(std::vector<std::shared_ptr<Sphere>>& potiential_spheres, const Ray& ray) const;
+    size_t coarseIntersect(std::vector<std::shared_ptr<Sphere>>& potiential_spheres, const Ray& ray) const;
 private:
     static constexpr int MAX_SPHERES = 5;
     Node m_root;

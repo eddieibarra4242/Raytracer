@@ -16,6 +16,7 @@
 
 #include "BVH.h"
 
+#include <algorithm>
 #include <queue>
 
 enum AXIS {
@@ -84,7 +85,8 @@ void BVH::process()
     }
 }
 
-void BVH::coarseIntersect(std::vector<std::shared_ptr<Sphere>>& potiential_spheres, const Ray& ray) const {
+size_t BVH::coarseIntersect(std::vector<std::shared_ptr<Sphere>>& potiential_spheres, const Ray& ray) const {
+    size_t numIntersections = 0;
     potiential_spheres.clear();
     std::queue<const Node*> q;
     q.push(&m_root);
@@ -93,6 +95,7 @@ void BVH::coarseIntersect(std::vector<std::shared_ptr<Sphere>>& potiential_spher
         const Node* curNode = q.front();
         q.pop();
 
+        numIntersections++;
         if(!curNode->m_boundingBox.intersect(ray)) {
             continue;
         }
@@ -111,4 +114,6 @@ void BVH::coarseIntersect(std::vector<std::shared_ptr<Sphere>>& potiential_spher
             }
         }
     }
+
+    return numIntersections;
 }

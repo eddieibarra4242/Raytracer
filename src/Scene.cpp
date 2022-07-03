@@ -18,18 +18,19 @@
 
 #include "vec_utilities.h"
 
-Intersection Scene::hit(std::vector<std::shared_ptr<Sphere>>& m_spheres, const Ray &ray) const {
-    bvh.coarseIntersect(m_spheres, ray);
+Intersection Scene::hit(std::vector<std::shared_ptr<Sphere>>& spheres, const Ray &ray) {
+    m_numIntersections = bvh.coarseIntersect(spheres, ray);
 
-    if(m_spheres.empty()) {
+    if(spheres.empty()) {
         return Intersection { false, false, -1.0f, ZERO_VECTOR, ZERO_VECTOR, std::shared_ptr<Shape>{ } };
     }
 
     float min_t = std::numeric_limits<float>::max();
-    size_t index = m_spheres.size();
+    size_t index = spheres.size();
 
-    for(size_t i = 0; i < m_spheres.size(); i++) {
-        float t = m_spheres[i]->intersect(ray);
+    for(size_t i = 0; i < spheres.size(); i++) {
+        float t = spheres[i]->intersect(ray);
+        m_numIntersections++;
 
         if(t >= T_EPSILON && t < min_t) {
             min_t = t;
@@ -37,11 +38,11 @@ Intersection Scene::hit(std::vector<std::shared_ptr<Sphere>>& m_spheres, const R
         }
     }
 
-    if(index < m_spheres.size()) {
+    if(index < spheres.size()) {
         glm::vec3 intersection_point = ray.origin + (ray.direction * min_t);
-        glm::vec3 normal = m_spheres[index]->normal(intersection_point);
+        glm::vec3 normal = spheres[index]->normal(intersection_point);
         bool front_face = dot(ray.direction, normal) <= 0;
-        return Intersection { true, front_face, min_t, intersection_point, (front_face ? 1.0f : -1.0f) * normal, m_spheres[index] };
+        return Intersection { true, front_face, min_t, intersection_point, (front_face ? 1.0f : -1.0f) * normal, spheres[index] };
     }
 
     return Intersection { false, false, -1.0f, ZERO_VECTOR, ZERO_VECTOR, std::shared_ptr<Shape>{ } };

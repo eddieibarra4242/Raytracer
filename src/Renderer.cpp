@@ -24,6 +24,8 @@
 #include "materials/Metal.h"
 #include "materials/Dielectric.h"
 
+#include <spdlog/spdlog.h>
+
 constexpr glm::vec3 CAMERA_POSITION {-13, 2, 3};
 constexpr glm::vec3 CAMERA_FORWARD = glm::vec3{0, 0, 0} - CAMERA_POSITION;
 
@@ -31,12 +33,13 @@ constexpr uint32_t DEFAULT_QUAD_SIZE = 100;
 
 constexpr float PI = 3.14159265358979323846264338327950288419f;
 
-glm::vec3 get_color(std::vector<std::shared_ptr<Sphere>>& m_spheres, const Scene& scene, const Ray& ray, uint32_t bounce_budget) {
+glm::vec3 get_color(std::vector<std::shared_ptr<Sphere>>& m_spheres, Scene& scene, const Ray& ray, uint32_t bounce_budget, size_t* numIntersectionsOut) {
     if(bounce_budget == 0) {
         return ZERO_VECTOR;
     }
 
     Intersection hit = scene.hit(m_spheres, ray);
+    *numIntersectionsOut += scene.getNumIntersections();
 
     if(hit.has_hit) {
         Scatter scatter = hit.shape->material()->scatter(ray, hit);
@@ -45,7 +48,7 @@ glm::vec3 get_color(std::vector<std::shared_ptr<Sphere>>& m_spheres, const Scene
             return ZERO_VECTOR;
         }
 
-        return scatter.attenuation * get_color(m_spheres, scene, scatter.scattered_ray, bounce_budget - 1);
+        return scatter.attenuation * get_color(m_spheres, scene, scatter.scattered_ray, bounce_budget - 1, numIntersectionsOut);
     }
 
     return Ray::sky_color(ray);
@@ -130,6 +133,9 @@ void Renderer::start_render() {
                 m_work_queue.pop();
             }
 
+            size_t intersectionAccum = 0;
+            size_t rayCount = 0;
+
             for (uint32_t y = q.m_min.y; y < q.m_max.y; y++) {
                 for (uint32_t x = q.m_min.x; x < q.m_max.x; x++) {
                     glm::vec3 color{0, 0, 0};
@@ -142,19 +148,39 @@ void Renderer::start_render() {
                         auto u = (static_cast<float>(x) + random_float()) / static_cast<float>(m_image.width() - 1);
                         auto v = (static_cast<float>(y) + random_float()) / static_cast<float>(m_image.height() - 1);
                         Ray r = m_camera.to_ray(u, v);
-                        color += get_color(m_spheres, m_scene, r, max_bounces);
+
+                        rayCount++;
+                        size_t totalIntersectionsPerRay = 0;
+                        color += get_color(m_spheres, m_scene, r, max_bounces, &totalIntersectionsPerRay);
+                        intersectionAccum += totalIntersectionsPerRay;
                     }
 
                     color *= (1.0f / static_cast<float>(samples));
                     m_image.draw(x, y, Color::to_color(color));
                 }
             }
+
+            reportAverage(static_cast<double>(intersectionAccum) / static_cast<double>(rayCount));
         }
     };
 
     for(size_t i = 0; i < m_rendering_threads.capacity(); i++) {
         m_rendering_threads.emplace_back(render_func);
     }
+}
+
+void Renderer::reportAverage(double average)
+{
+    std::lock_guard<std::mutex> guard{m_average_lock};
+    reportCount++;
+
+    if(reportCount == 1) {
+        runningIntersectionsPerRayAverage = average;
+    } else {
+        runningIntersectionsPerRayAverage += (average - runningIntersectionsPerRayAverage) / reportCount;
+    }
+
+    spdlog::info("Average {:.1f} Intersection Tests/Ray", runningIntersectionsPerRayAverage);
 }
 
 void Renderer::stop_render() {

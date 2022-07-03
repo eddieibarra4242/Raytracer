@@ -40,7 +40,10 @@ public:
 
     inline void process() { bvh.process(); }
 
-    [[nodiscard]] Intersection hit(std::vector<std::shared_ptr<Sphere>>& m_spheres, const Ray& ray) const;
+    [[nodiscard]] constexpr size_t getNumIntersections() const { return m_numIntersections; }
+
+    [[nodiscard]] Intersection hit(std::vector<std::shared_ptr<Sphere>>& spheres, const Ray& ray);
 private:
     BVH bvh;
+    size_t m_numIntersections = 0;
 };

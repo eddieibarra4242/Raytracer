@@ -42,8 +42,10 @@ public:
     void start_render();
     void stop_render();
     void present();
+
+    void reportAverage(double average);
 private:
-    static constexpr uint32_t samples = 256;
+    static constexpr uint32_t samples = 32;
     static constexpr uint32_t max_bounces = 16;
 
     bool m_should_stop = false;
@@ -56,4 +58,8 @@ private:
     std::mutex m_queue_mutex;
     std::queue<Quad> m_work_queue;
     std::vector<std::thread> m_rendering_threads;
+
+    std::mutex m_average_lock;
+    double runningIntersectionsPerRayAverage = 0;
+    double reportCount = 0;
 };
