@@ -105,7 +105,7 @@ Renderer::Renderer(uint32_t width, uint32_t height, size_t thread_count) :
 
     auto material2 = std::make_shared<Lambertian>(glm::vec3 (0.4f, 0.2f, 0.1f));
     m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(4, 1, 0), 1.0f, material2));
-
+    
     auto material3 = std::make_shared<Metal>(glm::vec3(0.7f, 0.6f, 0.5f), 0.0f);
     m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(-4, 1, 0), 1.0f, material3));
 
@@ -138,7 +138,7 @@ void Renderer::start_render() {
 
             for (uint32_t y = q.m_min.y; y < q.m_max.y; y++) {
                 for (uint32_t x = q.m_min.x; x < q.m_max.x; x++) {
-                    glm::vec3 color{0, 0, 0};
+                    glm::vec3 color { q.m_colorArr.get()[static_cast<size_t>(x - q.m_min.x) + static_cast<size_t>(y - q.m_min.y) * static_cast<size_t>(q.m_max.x - q.m_min.x)] };
 
                     for (uint32_t sample = 0; sample < samples; sample++) {
                         if (m_should_stop) {
@@ -151,16 +151,37 @@ void Renderer::start_render() {
 
                         rayCount++;
                         size_t totalIntersectionsPerRay = 0;
-                        color += get_color(m_spheres, m_scene, r, max_bounces, &totalIntersectionsPerRay);
+
+                        glm::vec3 newColor = get_color(m_spheres, m_scene, r, max_bounces, &totalIntersectionsPerRay);
+                        float k = static_cast<float>(q.m_sampleCount + sample) + 1.0f;
+
+                        if(k == 1) {
+                            color = newColor;
+                        } else {
+                            color += (newColor - color) / k;
+                        }
+                        
                         intersectionAccum += totalIntersectionsPerRay;
                     }
 
-                    color *= (1.0f / static_cast<float>(samples));
                     m_image.draw(x, y, Color::to_color(color));
+                    q.m_colorArr.get()[static_cast<size_t>(x - q.m_min.x) + static_cast<size_t>(y - q.m_min.y) * static_cast<size_t>(q.m_max.x - q.m_min.x)] = color;
                 }
             }
 
+            q.m_sampleCount += samples;
+
+            {
+                std::lock_guard<std::mutex> guard{m_average_lock};
+                spdlog::debug("Samples So Far: {}", q.m_sampleCount);
+            }
+
             reportAverage(static_cast<double>(intersectionAccum) / static_cast<double>(rayCount));
+
+            {
+                std::lock_guard<std::mutex> lock{m_queue_mutex};
+                m_work_queue.push(q);
+            }
         }
     };
 
@@ -180,7 +201,7 @@ void Renderer::reportAverage(double average)
         runningIntersectionsPerRayAverage += (average - runningIntersectionsPerRayAverage) / reportCount;
     }
 
-    spdlog::info("Average {:.1f} Intersection Tests/Ray", runningIntersectionsPerRayAverage);
+    spdlog::debug("Average {:.1f} Intersection Tests/Ray", runningIntersectionsPerRayAverage);
 }
 
 void Renderer::stop_render() {

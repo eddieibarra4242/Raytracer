@@ -30,8 +30,11 @@ struct Quad
     using vec2i = glm::vec<2, uint32_t, glm::defaultp>;
     vec2i m_min;
     vec2i m_max;
+    
+    size_t m_sampleCount = 0;
+    std::shared_ptr<glm::vec3> m_colorArr;
 
-    Quad(const vec2i& min, const vec2i& max) : m_min(min), m_max(max) { }
+    Quad(const vec2i& min, const vec2i& max) : m_min(min), m_max(max), m_colorArr{ new glm::vec3[static_cast<size_t>(m_max.x - m_min.x) * static_cast<size_t>(m_max.y - m_min.y)] } { }
 };
 
 class Renderer {
@@ -45,7 +48,7 @@ public:
 
     void reportAverage(double average);
 private:
-    static constexpr uint32_t samples = 32;
+    static constexpr uint32_t samples = 8;
     static constexpr uint32_t max_bounces = 16;
 
     bool m_should_stop = false;
