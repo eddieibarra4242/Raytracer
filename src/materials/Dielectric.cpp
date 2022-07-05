@@ -39,5 +39,5 @@ Scatter Dielectric::scatter(const Ray &incident, const Intersection &intersectio
         direction = refract(incident.direction, intersection.normal, ir, cos_theta);
     }
 
-    return {false, glm::vec3(1), Ray{ intersection.intersection_point, direction }};
+    return {false, false, glm::vec3(1), Ray{ intersection.intersection_point, direction }};
 }

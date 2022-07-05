@@ -14,24 +14,13 @@
    limitations under the License.
 */
 
-#pragma once
+#include "Emissive.h"
 
-#include <glm/glm.hpp>
-#include "../Ray.h"
+#include "../Scene.h"
+#include "../vec_utilities.h"
 
-struct Intersection;
+static constexpr glm::vec3 ZERO { 0, 0, 0 };
 
-struct Scatter
-{
-    bool absorbed;
-    bool emissive = false;
-    glm::vec3 attenuation;
-    Ray scattered_ray;
-};
-
-class Material
-{
-public:
-    virtual ~Material() = default;
-    [[nodiscard]] virtual Scatter scatter(const Ray& incident, const Intersection& intersection) const = 0;
-};
+Scatter Emissive::scatter(const Ray &incident, const Intersection &intersection) const {
+    return { true, true, m_color, Ray{ ZERO, ZERO } };
+}

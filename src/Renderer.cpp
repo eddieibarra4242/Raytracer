@@ -23,6 +23,7 @@
 #include "materials/Lambertian.h"
 #include "materials/Metal.h"
 #include "materials/Dielectric.h"
+#include "materials/Emissive.h"
 
 #include <spdlog/spdlog.h>
 
@@ -44,7 +45,9 @@ glm::vec3 get_color(std::vector<std::shared_ptr<Sphere>>& m_spheres, Scene& scen
     if(hit.has_hit) {
         Scatter scatter = hit.shape->material()->scatter(ray, hit);
 
-        if(scatter.absorbed) {
+        if(scatter.absorbed && scatter.emissive) {
+            return scatter.attenuation;
+        } else if(scatter.absorbed) {
             return ZERO_VECTOR;
         }
 
@@ -80,12 +83,12 @@ Renderer::Renderer(uint32_t width, uint32_t height, size_t thread_count) :
             if (glm::length(center - glm::vec3(4, 0.2f, 0)) > 0.9f) {
                 std::shared_ptr<Material> sphere_material;
 
-                if (choose_mat < 0.8f) {
+                if (choose_mat < 0.45f) {
                     // diffuse
                     auto albedo = random_color() * random_color();
                     sphere_material = std::make_shared<Lambertian>(albedo);
                     m_scene.add_shape(std::make_shared<Sphere>(center, 0.2f, sphere_material));
-                } else if (choose_mat < 0.95f) {
+                } else if (choose_mat < 0.75f) {
                     // metal
                     auto albedo = random_color(0.5f, 1);
                     auto fuzz = random_float(0, 0.5f);
@@ -93,7 +96,7 @@ Renderer::Renderer(uint32_t width, uint32_t height, size_t thread_count) :
                     m_scene.add_shape(std::make_shared<Sphere>(center, 0.2f, sphere_material));
                 } else {
                     // glass
-                    sphere_material = std::make_shared<Dielectric>(1.5f);
+                    sphere_material = std::make_shared<Emissive>(random_color());
                     m_scene.add_shape(std::make_shared<Sphere>(center, 0.2f, sphere_material));
                 }
             }
@@ -101,13 +104,12 @@ Renderer::Renderer(uint32_t width, uint32_t height, size_t thread_count) :
     }
 
     auto material1 = std::make_shared<Dielectric>(1.5f);
-    m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(0, 1, 0), 1.0f, material1));
-
-    auto material2 = std::make_shared<Lambertian>(glm::vec3 (0.4f, 0.2f, 0.1f));
-    m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(4, 1, 0), 1.0f, material2));
-    
+    auto material2 = std::make_shared<Emissive>(glm::vec3 (1.f, 1.f, 1.f)); //auto material2 = std::make_shared<Lambertian>(glm::vec3 (0.4f, 0.2f, 0.1f));
     auto material3 = std::make_shared<Metal>(glm::vec3(0.7f, 0.6f, 0.5f), 0.0f);
-    m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(-4, 1, 0), 1.0f, material3));
+
+    m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(0, 1, 0), 1.0f, material1));
+    m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(4, 1, 0), 1.0f, material3));
+    m_scene.add_shape(std::make_shared<Sphere>(glm::vec3(-4, 1, 0), 1.0f, material2));
 
     m_scene.process();
 
