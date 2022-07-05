@@ -21,12 +21,12 @@
 
 enum AXIS {
     X = 0,
-    Y = 1,
-    Z = 2
+    Z = 1
+    //Z = 2
 };
 
 constexpr AXIS toAxis(int i) {
-    return static_cast<AXIS>(i % 3);
+    return static_cast<AXIS>(i % 2);
 }
 
 struct SphereLess {
@@ -35,7 +35,7 @@ struct SphereLess {
     bool operator()(const std::shared_ptr<Sphere>& s1, const std::shared_ptr<Sphere>& s2) const {
         switch (axis) {
             case X: return s1->position().x < s2->position().x;
-            case Y: return s1->position().y < s2->position().y;
+            //case Y: return s1->position().y < s2->position().y;
             case Z: return s1->position().z < s2->position().z;
         }
     }
