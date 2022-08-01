@@ -31,8 +31,8 @@ bool AABB::intersect(const Ray& ray) const
     */
 
     bool inside = true;
-    uint8_t quadrant[3];
-    float candidatePlane[3];
+    uint8_t quadrant[3] { 0 };
+    float candidatePlane[3] { 0 };
 
     /* Find candidate planes; this loop can be avoided if
        rays cast all from the eye(assume perspective view) */

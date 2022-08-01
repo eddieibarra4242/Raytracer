@@ -38,6 +38,8 @@ struct SphereLess {
             //case Y: return s1->position().y < s2->position().y;
             case Z: return s1->position().z < s2->position().z;
         }
+
+        return false;
     }
 };
 
@@ -68,7 +70,7 @@ void BVH::process()
         curNode->m_left = std::make_unique<Node>();
         curNode->m_right = std::make_unique<Node>();
 
-        for(int i = 0; i < curNode->m_spheres.size(); i++) {
+        for(size_t i = 0; i < curNode->m_spheres.size(); i++) {
             Node* toAdd = curNode->m_left.get();
 
             if(i > curNode->m_spheres.size() / 2) {

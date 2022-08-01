@@ -21,6 +21,6 @@
 
 static constexpr glm::vec3 ZERO { 0, 0, 0 };
 
-Scatter Emissive::scatter(const Ray &incident, const Intersection &intersection) const {
+Scatter Emissive::scatter([[maybe_unused]] const Ray &incident, [[maybe_unused]] const Intersection &intersection) const {
     return { true, true, m_color, Ray{ ZERO, ZERO } };
 }

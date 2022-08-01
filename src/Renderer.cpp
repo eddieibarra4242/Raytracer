@@ -140,7 +140,7 @@ void Renderer::start_render() {
 
             for (uint32_t y = q.m_min.y; y < q.m_max.y; y++) {
                 for (uint32_t x = q.m_min.x; x < q.m_max.x; x++) {
-                    glm::vec3 color { q.m_colorArr.get()[static_cast<size_t>(x - q.m_min.x) + static_cast<size_t>(y - q.m_min.y) * static_cast<size_t>(q.m_max.x - q.m_min.x)] };
+                    glm::vec3 color { q.m_colorArr.get()[static_cast<size_t>(x - q.m_min.x + (y - q.m_min.y) * (q.m_max.x - q.m_min.x))] };
 
                     for (uint32_t sample = 0; sample < samples; sample++) {
                         if (m_should_stop) {
@@ -167,7 +167,7 @@ void Renderer::start_render() {
                     }
 
                     m_image.draw(x, y, Color::to_color(color));
-                    q.m_colorArr.get()[static_cast<size_t>(x - q.m_min.x) + static_cast<size_t>(y - q.m_min.y) * static_cast<size_t>(q.m_max.x - q.m_min.x)] = color;
+                    q.m_colorArr.get()[static_cast<size_t>(x - q.m_min.x + (y - q.m_min.y) * (q.m_max.x - q.m_min.x))] = color;
                 }
             }
 

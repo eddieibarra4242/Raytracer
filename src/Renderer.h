@@ -32,9 +32,9 @@ struct Quad
     vec2i m_max;
     
     size_t m_sampleCount = 0;
-    std::shared_ptr<glm::vec3> m_colorArr;
+    std::shared_ptr<glm::vec3[]> m_colorArr;
 
-    Quad(const vec2i& min, const vec2i& max) : m_min(min), m_max(max), m_colorArr{ new glm::vec3[static_cast<size_t>(m_max.x - m_min.x) * static_cast<size_t>(m_max.y - m_min.y)] } { }
+    Quad(const vec2i& min, const vec2i& max) : m_min(min), m_max(max), m_colorArr{ std::make_shared<glm::vec3[]>(static_cast<size_t>((m_max.x - m_min.x) * (m_max.y - m_min.y))) } { }
 };
 
 class Renderer {
