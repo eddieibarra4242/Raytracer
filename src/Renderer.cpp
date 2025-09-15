@@ -16,6 +16,7 @@
 
 #include "Renderer.h"
 #include "vec_utilities.h"
+#include "log.h"
 
 #include "shapes/Sphere.h"
 #include "shapes/Plane.h"
@@ -173,7 +174,7 @@ void Renderer::start_render() {
 
             {
                 std::lock_guard<std::mutex> guard{m_average_lock};
-                // spdlog::debug("Samples So Far: {}", q.m_sampleCount);
+                DEBUG("Samples So Far: %zu", q.m_sampleCount);
             }
 
             reportAverage(static_cast<double>(intersectionAccum) / static_cast<double>(rayCount));
@@ -201,7 +202,7 @@ void Renderer::reportAverage(double average)
         runningIntersectionsPerRayAverage += (average - runningIntersectionsPerRayAverage) / reportCount;
     }
 
-    // spdlog::debug("Average {:.1f} Intersection Tests/Ray", runningIntersectionsPerRayAverage);
+    DEBUG("Average %.1lf Intersection Tests/Ray", runningIntersectionsPerRayAverage);
 }
 
 void Renderer::stop_render() {

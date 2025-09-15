@@ -19,10 +19,6 @@
 
 int main()
 {
-#ifndef NDEBUG
-    // spdlog::set_level(spdlog::level::debug);
-#endif
-
     static constexpr uint32_t WIDTH = 1280;
     static constexpr uint32_t HEIGHT = 720;
 

@@ -16,6 +16,7 @@ OUTPUT_NAME = raytracer
 OBJ_FILES = main.o Window.o Bitmap.o Camera.o shapes/Sphere.o shapes/Plane.o
 OBJ_FILES += Scene.o Renderer.o materials/Lambertian.o materials/Metal.o
 OBJ_FILES += materials/Dielectric.o materials/Emissive.o sas/AABB.o sas/BVH.o
+OBJ_FILES += log.o
 
 all: mkdirs $(OBJ_FILES)
 	$(CPP) $(OBJ_FILES:%=../bin/int/%) -o ../bin/$(OUTPUT_NAME) $(LINK_FLAGS)
