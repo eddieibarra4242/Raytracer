@@ -25,8 +25,6 @@
 #include "materials/Dielectric.h"
 #include "materials/Emissive.h"
 
-#include <spdlog/spdlog.h>
-
 constexpr glm::vec3 CAMERA_POSITION {-13, 2, 3};
 constexpr glm::vec3 CAMERA_FORWARD = glm::vec3{0, 0, 0} - CAMERA_POSITION;
 
@@ -175,7 +173,7 @@ void Renderer::start_render() {
 
             {
                 std::lock_guard<std::mutex> guard{m_average_lock};
-                spdlog::debug("Samples So Far: {}", q.m_sampleCount);
+                // spdlog::debug("Samples So Far: {}", q.m_sampleCount);
             }
 
             reportAverage(static_cast<double>(intersectionAccum) / static_cast<double>(rayCount));
@@ -203,7 +201,7 @@ void Renderer::reportAverage(double average)
         runningIntersectionsPerRayAverage += (average - runningIntersectionsPerRayAverage) / reportCount;
     }
 
-    spdlog::debug("Average {:.1f} Intersection Tests/Ray", runningIntersectionsPerRayAverage);
+    // spdlog::debug("Average {:.1f} Intersection Tests/Ray", runningIntersectionsPerRayAverage);
 }
 
 void Renderer::stop_render() {

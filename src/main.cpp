@@ -17,12 +17,10 @@
 #include "Window.h"
 #include "Renderer.h"
 
-#include <spdlog/spdlog.h>
-
 int main()
 {
 #ifndef NDEBUG
-    spdlog::set_level(spdlog::level::debug);
+    // spdlog::set_level(spdlog::level::debug);
 #endif
 
     static constexpr uint32_t WIDTH = 1280;

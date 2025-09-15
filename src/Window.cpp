@@ -16,11 +16,12 @@
 
 #include "Window.h"
 
-#include <spdlog/spdlog.h>
+#include <cstdlib>
 
 Window::Window(uint32_t width, uint32_t height, const char *title) : m_width{ width }, m_height{ height } {
     if(!glfwInit()) {
-        spdlog::critical("Failed to init GLFW");
+        // spdlog::critical("Failed to init GLFW");
+        exit(-1);
     }
 
     glfwDefaultWindowHints();
@@ -34,7 +35,8 @@ Window::Window(uint32_t width, uint32_t height, const char *title) : m_width{ wi
     glfwSwapInterval(1);
 
     if(glewInit() != GLEW_OK) {
-        spdlog::critical("Failed to init GLEW");
+        // spdlog::critical("Failed to init GLEW");
+        exit(-1);
     }
 
     glEnable(GL_TEXTURE_2D);
