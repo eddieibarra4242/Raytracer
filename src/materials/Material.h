@@ -16,22 +16,21 @@
 
 #pragma once
 
-#include <glm/glm.hpp>
 #include "../Ray.h"
+#include <glm/glm.hpp>
 
 struct Intersection;
 
-struct Scatter
-{
-    bool absorbed;
-    bool emissive = false;
-    glm::vec3 attenuation;
-    Ray scattered_ray;
+struct Scatter {
+  bool absorbed;
+  bool emissive = false;
+  glm::vec3 attenuation;
+  Ray scattered_ray;
 };
 
-class Material
-{
+class Material {
 public:
-    virtual ~Material() = default;
-    [[nodiscard]] virtual Scatter scatter(const Ray& incident, const Intersection& intersection) const = 0;
+  virtual ~Material() = default;
+  [[nodiscard]] virtual Scatter
+  scatter(const Ray &incident, const Intersection &intersection) const = 0;
 };

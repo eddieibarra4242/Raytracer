@@ -18,22 +18,23 @@
 
 #include <glm/glm.hpp>
 
-#include "../shapes/Sphere.h"
 #include "../Ray.h"
+#include "../shapes/Sphere.h"
 
 class AABB {
 public:
-    AABB() = default;
-    AABB(glm::vec3 corner1, glm::vec3 corner2) : m_min(glm::min(corner1, corner2)), m_max(glm::max(corner1, corner2)) { }
+  AABB() = default;
+  AABB(glm::vec3 corner1, glm::vec3 corner2)
+    : m_min(glm::min(corner1, corner2)), m_max(glm::max(corner1, corner2)) {}
 
-    [[nodiscard]] bool intersect(const Ray& ray) const;
+  [[nodiscard]] bool intersect(const Ray &ray) const;
 
-    void fit(const Sphere& s);
+  void fit(const Sphere &s);
 
-    [[nodiscard]] constexpr glm::vec3 min() const { return m_min; }
-    [[nodiscard]] constexpr glm::vec3 max() const { return m_max; }
+  [[nodiscard]] constexpr glm::vec3 min() const { return m_min; }
+  [[nodiscard]] constexpr glm::vec3 max() const { return m_max; }
 
 private:
-    glm::vec3 m_min;
-    glm::vec3 m_max;
+  glm::vec3 m_min;
+  glm::vec3 m_max;
 };

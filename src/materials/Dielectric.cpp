@@ -20,24 +20,28 @@
 #include "../vec_utilities.h"
 
 constexpr float reflectance(float cos, float refraction_index) {
-    auto r0 = (1.0 - static_cast<double>(refraction_index)) / (1.0 + static_cast<double>(refraction_index));
-    r0 = r0 * r0;
-    return static_cast<float>(r0 + (1.0 - r0) * std::pow(1 - cos, 5));
+  auto r0 = (1.0 - static_cast<double>(refraction_index)) /
+            (1.0 + static_cast<double>(refraction_index));
+  r0 = r0 * r0;
+  return static_cast<float>(r0 + (1.0 - r0) * std::pow(1 - cos, 5));
 }
 
-Scatter Dielectric::scatter(const Ray &incident, const Intersection &intersection) const {
-    float ir = intersection.front_face ? (1.0f / m_refraction_index) : m_refraction_index;
+Scatter Dielectric::scatter(const Ray &incident,
+                            const Intersection &intersection) const {
+  float ir =
+    intersection.front_face ? (1.0f / m_refraction_index) : m_refraction_index;
 
-    float cos_theta = dot(-incident.direction, intersection.normal);
-    float sin_theta = sqrtf(1.0f - cos_theta * cos_theta);
+  float cos_theta = dot(-incident.direction, intersection.normal);
+  float sin_theta = sqrtf(1.0f - cos_theta * cos_theta);
 
-    glm::vec3 direction { };
+  glm::vec3 direction{};
 
-    if(ir * sin_theta > 1.0f || reflectance(cos_theta, ir) > random_float()) {
-        direction = reflect(incident.direction, intersection.normal);
-    } else {
-        direction = refract(incident.direction, intersection.normal, ir, cos_theta);
-    }
+  if (ir * sin_theta > 1.0f || reflectance(cos_theta, ir) > random_float()) {
+    direction = reflect(incident.direction, intersection.normal);
+  } else {
+    direction = refract(incident.direction, intersection.normal, ir, cos_theta);
+  }
 
-    return {false, false, glm::vec3(1), Ray{ intersection.intersection_point, direction }};
+  return {false, false, glm::vec3(1),
+          Ray{intersection.intersection_point, direction}};
 }

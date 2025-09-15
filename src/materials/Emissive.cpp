@@ -19,8 +19,10 @@
 #include "../Scene.h"
 #include "../vec_utilities.h"
 
-static constexpr glm::vec3 ZERO { 0, 0, 0 };
+static constexpr glm::vec3 ZERO{0, 0, 0};
 
-Scatter Emissive::scatter([[maybe_unused]] const Ray &incident, [[maybe_unused]] const Intersection &intersection) const {
-    return { true, true, m_color, Ray{ ZERO, ZERO } };
+Scatter
+Emissive::scatter([[maybe_unused]] const Ray &incident,
+                  [[maybe_unused]] const Intersection &intersection) const {
+  return {true, true, m_color, Ray{ZERO, ZERO}};
 }

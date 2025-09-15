@@ -18,18 +18,17 @@
 
 #include <glm/glm.hpp>
 
-struct Ray
-{
-    glm::vec3 origin;
-    glm::vec3 direction;
+struct Ray {
+  glm::vec3 origin;
+  glm::vec3 direction;
 
-    static glm::vec3 sky_color([[maybe_unused]] const Ray& r) {
-        // static constexpr auto blue = glm::vec3(0.5, 0.7, 1.0);
-        // static constexpr auto white = glm::vec3{1.0, 1.0, 1.0};
+  static glm::vec3 sky_color([[maybe_unused]] const Ray &r) {
+    // static constexpr auto blue = glm::vec3(0.5, 0.7, 1.0);
+    // static constexpr auto white = glm::vec3{1.0, 1.0, 1.0};
 
-        // auto t = 0.5f * (r.direction.y + 1.0f);
-        // return white * (1.0f - t) + blue * t;
+    // auto t = 0.5f * (r.direction.y + 1.0f);
+    // return white * (1.0f - t) + blue * t;
 
-        return glm::vec3(0);
-    }
+    return glm::vec3(0);
+  }
 };

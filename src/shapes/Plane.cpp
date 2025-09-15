@@ -17,16 +17,16 @@
 #include "Plane.h"
 
 float Plane::intersect(const Ray &ray) {
-    float denominator = dot(m_normal, ray.direction);
+  float denominator = dot(m_normal, ray.direction);
 
-    if (std::abs(denominator) > EPSILON) {
-        glm::vec3 to_point = m_point - ray.origin;
-        return dot(to_point, m_normal) / denominator;
-    }
+  if (std::abs(denominator) > EPSILON) {
+    glm::vec3 to_point = m_point - ray.origin;
+    return dot(to_point, m_normal) / denominator;
+  }
 
-    return -1;
+  return -1;
 }
 
 glm::vec3 Plane::normal([[maybe_unused]] const glm::vec3 &point) {
-    return m_normal;
+  return m_normal;
 }

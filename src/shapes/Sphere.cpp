@@ -18,28 +18,29 @@
 #include "../vec_utilities.h"
 
 float Sphere::intersect(const Ray &ray) {
-    glm::vec3 to_center = ray.origin - m_position;
+  glm::vec3 to_center = ray.origin - m_position;
 
-    auto a = 1.0f; // distance_sq(ray.direction) but ray.direction is normalized, so result is always 1.
-    auto b = 2.0f * dot(to_center, ray.direction);
-    auto c = distance_sq(to_center) - m_radius * m_radius;
+  auto a = 1.0f; // distance_sq(ray.direction) but ray.direction is normalized,
+                 // so result is always 1.
+  auto b = 2.0f * dot(to_center, ray.direction);
+  auto c = distance_sq(to_center) - m_radius * m_radius;
 
-    auto disc = b * b - 4.0f * a * c;
+  auto disc = b * b - 4.0f * a * c;
 
-    if(disc < 0) {
-        return -1;
-    }
+  if (disc < 0) {
+    return -1;
+  }
 
-    auto t1 = (-b - sqrtf(disc)) / (2.0f * a);
-    auto t2 = (-b + sqrtf(disc)) / (2.0f * a);
+  auto t1 = (-b - sqrtf(disc)) / (2.0f * a);
+  auto t2 = (-b + sqrtf(disc)) / (2.0f * a);
 
-    if(t1 < T_EPSILON) {
-        return t2;
-    }
+  if (t1 < T_EPSILON) {
+    return t2;
+  }
 
-    return t1;
+  return t1;
 }
 
 glm::vec3 Sphere::normal(const glm::vec3 &point) {
-    return normalize(point - m_position);
+  return normalize(point - m_position);
 }

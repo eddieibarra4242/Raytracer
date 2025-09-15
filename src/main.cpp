@@ -14,30 +14,29 @@
    limitations under the License.
 */
 
-#include "Window.h"
 #include "Renderer.h"
+#include "Window.h"
 
-int main()
-{
-    static constexpr uint32_t WIDTH = 1280;
-    static constexpr uint32_t HEIGHT = 720;
+int main() {
+  static constexpr uint32_t WIDTH = 1280;
+  static constexpr uint32_t HEIGHT = 720;
 
-    Window window(WIDTH, HEIGHT, "Raytracer");
-    Renderer renderer(WIDTH, HEIGHT);
+  Window window(WIDTH, HEIGHT, "Raytracer");
+  Renderer renderer(WIDTH, HEIGHT);
 
-    renderer.start_render();
+  renderer.start_render();
 
-    glClearColor(1, 0, 0, 1);
+  glClearColor(1, 0, 0, 1);
 
-    while(!window.shouldClose()) {
-        Window::poll();
+  while (!window.shouldClose()) {
+    Window::poll();
 
-        glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT);
 
-        renderer.present();
+    renderer.present();
 
-        window.present();
-    }
+    window.present();
+  }
 
-    renderer.stop_render();
+  renderer.stop_render();
 }

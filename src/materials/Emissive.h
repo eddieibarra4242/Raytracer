@@ -20,9 +20,11 @@
 
 class Emissive : public Material {
 public:
-    explicit Emissive(const glm::vec3& color) : m_color(color) { }
+  explicit Emissive(const glm::vec3 &color) : m_color(color) {}
 
-    [[nodiscard]] Scatter scatter(const Ray& incident, const Intersection& intersection) const override;
+  [[nodiscard]] Scatter
+  scatter(const Ray &incident, const Intersection &intersection) const override;
+
 private:
-    glm::vec3 m_color;
+  glm::vec3 m_color;
 };

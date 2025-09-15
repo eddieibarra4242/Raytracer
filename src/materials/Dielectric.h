@@ -20,9 +20,12 @@
 
 class Dielectric : public Material {
 public:
-    explicit Dielectric(float refraction_index) : m_refraction_index{ refraction_index } { }
+  explicit Dielectric(float refraction_index)
+    : m_refraction_index{refraction_index} {}
 
-    [[nodiscard]] Scatter scatter(const Ray& incident, const Intersection& intersection) const override;
+  [[nodiscard]] Scatter
+  scatter(const Ray &incident, const Intersection &intersection) const override;
+
 private:
-    float m_refraction_index;
+  float m_refraction_index;
 };

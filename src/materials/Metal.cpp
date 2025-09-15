@@ -19,7 +19,11 @@
 #include "../Scene.h"
 #include "../vec_utilities.h"
 
-Scatter Metal::scatter(const Ray &incident, const Intersection &intersection) const {
-    glm::vec3 reflected_direction = normalize(reflect(incident.direction, intersection.normal) + m_fuzz * random_normalized_vector());
-    return { dot(reflected_direction, intersection.normal) <= 0, false, m_albedo, Ray{ intersection.intersection_point, reflected_direction } };
+Scatter Metal::scatter(const Ray &incident,
+                       const Intersection &intersection) const {
+  glm::vec3 reflected_direction =
+    normalize(reflect(incident.direction, intersection.normal) +
+              m_fuzz * random_normalized_vector());
+  return {dot(reflected_direction, intersection.normal) <= 0, false, m_albedo,
+          Ray{intersection.intersection_point, reflected_direction}};
 }

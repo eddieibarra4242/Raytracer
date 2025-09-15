@@ -24,21 +24,24 @@
 #include "AABB.h"
 
 struct Node {
-    std::unique_ptr<Node> m_left;
-    std::unique_ptr<Node> m_right;
-    AABB m_boundingBox;
-    std::vector<std::shared_ptr<Sphere>> m_spheres;
+  std::unique_ptr<Node> m_left;
+  std::unique_ptr<Node> m_right;
+  AABB m_boundingBox;
+  std::vector<std::shared_ptr<Sphere>> m_spheres;
 };
 
 class BVH {
 public:
-    BVH() = default;
+  BVH() = default;
 
-    void add(const std::shared_ptr<Sphere>& s);
-    void process();
+  void add(const std::shared_ptr<Sphere> &s);
+  void process();
 
-    size_t coarseIntersect(std::vector<std::shared_ptr<Sphere>>& potiential_spheres, const Ray& ray) const;
+  size_t
+  coarseIntersect(std::vector<std::shared_ptr<Sphere>> &potiential_spheres,
+                  const Ray &ray) const;
+
 private:
-    static constexpr int MAX_SPHERES = 5;
-    Node m_root;
+  static constexpr int MAX_SPHERES = 5;
+  Node m_root;
 };

@@ -22,16 +22,19 @@
 #include "../Ray.h"
 #include "../materials/Material.h"
 
-class Shape
-{
+class Shape {
 public:
-    explicit Shape(std::shared_ptr<Material>  material) : m_material{std::move(material)} { }
-    virtual ~Shape() = default;
+  explicit Shape(std::shared_ptr<Material> material)
+    : m_material{std::move(material)} {}
+  virtual ~Shape() = default;
 
-    [[nodiscard]] virtual glm::vec3 normal(const glm::vec3& point) = 0;
-    [[nodiscard]] virtual float intersect(const Ray& ray) = 0;
+  [[nodiscard]] virtual glm::vec3 normal(const glm::vec3 &point) = 0;
+  [[nodiscard]] virtual float intersect(const Ray &ray) = 0;
 
-    [[nodiscard]] inline std::shared_ptr<Material> material() const { return m_material; }
+  [[nodiscard]] inline std::shared_ptr<Material> material() const {
+    return m_material;
+  }
+
 private:
-    std::shared_ptr<Material> m_material;
+  std::shared_ptr<Material> m_material;
 };

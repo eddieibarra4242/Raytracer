@@ -19,31 +19,36 @@
 #include <memory>
 #include <vector>
 
-#include "shapes/Shape.h"
 #include "sas/BVH.h"
+#include "shapes/Shape.h"
 
-struct Intersection
-{
-    bool has_hit;
-    bool front_face;
-    float distance;
-    glm::vec3 intersection_point;
-    glm::vec3 normal;
-    std::shared_ptr<Shape> shape;
+struct Intersection {
+  bool has_hit;
+  bool front_face;
+  float distance;
+  glm::vec3 intersection_point;
+  glm::vec3 normal;
+  std::shared_ptr<Shape> shape;
 };
 
 class Scene {
 public:
-    Scene() = default;
+  Scene() = default;
 
-    inline void add_shape(const std::shared_ptr<Sphere>& sphere) { bvh.add(sphere); }
+  inline void add_shape(const std::shared_ptr<Sphere> &sphere) {
+    bvh.add(sphere);
+  }
 
-    inline void process() { bvh.process(); }
+  inline void process() { bvh.process(); }
 
-    [[nodiscard]] constexpr size_t getNumIntersections() const { return m_numIntersections; }
+  [[nodiscard]] constexpr size_t getNumIntersections() const {
+    return m_numIntersections;
+  }
 
-    [[nodiscard]] Intersection hit(std::vector<std::shared_ptr<Sphere>>& spheres, const Ray& ray);
+  [[nodiscard]] Intersection hit(std::vector<std::shared_ptr<Sphere>> &spheres,
+                                 const Ray &ray);
+
 private:
-    BVH bvh;
-    size_t m_numIntersections = 0;
+  BVH bvh;
+  size_t m_numIntersections = 0;
 };

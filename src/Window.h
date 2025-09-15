@@ -21,17 +21,18 @@
 
 class Window {
 public:
-    Window(uint32_t width, uint32_t height, const char* title);
-    ~Window();
+  Window(uint32_t width, uint32_t height, const char *title);
+  ~Window();
 
-    [[nodiscard]] bool shouldClose() const;
-    void present() const;
-    static void poll();
+  [[nodiscard]] bool shouldClose() const;
+  void present() const;
+  static void poll();
 
-    [[nodiscard]] constexpr uint32_t width() const { return m_width; }
-    [[nodiscard]] constexpr uint32_t height() const { return m_height; }
+  [[nodiscard]] constexpr uint32_t width() const { return m_width; }
+  [[nodiscard]] constexpr uint32_t height() const { return m_height; }
+
 private:
-    GLFWwindow* m_window;
-    uint32_t m_width;
-    uint32_t m_height;
+  GLFWwindow *m_window;
+  uint32_t m_width;
+  uint32_t m_height;
 };
