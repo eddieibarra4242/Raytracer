@@ -16,20 +16,25 @@
 
 #pragma once
 
-#include "../vec_utilities.h"
-#include "Shape.h"
+#include <glm/glm.hpp>
 
-class Plane : public Shape {
+#include "../Ray.hpp"
+#include "../shapes/Sphere.hpp"
+
+class AABB {
 public:
-  Plane(const glm::vec3 &normal, const glm::vec3 &point,
-        const std::shared_ptr<Material> &material)
-    : Shape(material), m_normal{normalize(normal)}, m_point{point} {}
+  AABB() = default;
+  AABB(glm::vec3 corner1, glm::vec3 corner2)
+    : m_min(glm::min(corner1, corner2)), m_max(glm::max(corner1, corner2)) {}
 
-  [[nodiscard]] glm::vec3 normal(const glm::vec3 &point) override;
-  [[nodiscard]] float intersect(const Ray &ray) override;
+  [[nodiscard]] bool intersect(const Ray &ray) const;
+
+  void fit(const Sphere &s);
+
+  [[nodiscard]] constexpr glm::vec3 min() const { return m_min; }
+  [[nodiscard]] constexpr glm::vec3 max() const { return m_max; }
 
 private:
-  glm::vec3 m_normal;
-  glm::vec3 m_point; // TODO: change to a scalar representation.
-                     // float m_distance;
+  glm::vec3 m_min;
+  glm::vec3 m_max;
 };

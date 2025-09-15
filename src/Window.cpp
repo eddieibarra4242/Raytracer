@@ -14,8 +14,8 @@
    limitations under the License.
 */
 
-#include "Window.h"
-#include "log.h"
+#include "Window.hpp"
+#include "log.hpp"
 
 #include <cstdlib>
 

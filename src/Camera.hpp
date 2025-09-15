@@ -16,21 +16,28 @@
 
 #pragma once
 
-#include "../Ray.h"
 #include <glm/glm.hpp>
 
-struct Intersection;
+#include "Ray.hpp"
 
-struct Scatter {
-  bool absorbed;
-  bool emissive = false;
-  glm::vec3 attenuation;
-  Ray scattered_ray;
-};
-
-class Material {
+class Camera {
 public:
-  virtual ~Material() = default;
-  [[nodiscard]] virtual Scatter
-  scatter(const Ray &incident, const Intersection &intersection) const = 0;
+  Camera(const glm::vec3 &position, const glm::vec3 &forward,
+         float aspect_ratio, float fov, float aperture, float focal_length);
+
+  Ray to_ray(float x, float y);
+
+private:
+  glm::vec3 m_position;
+
+  glm::vec3 m_forward;
+  glm::vec3 m_up;
+  glm::vec3 m_right;
+
+  glm::vec3 m_top_left;
+  glm::vec3 m_horizontal;
+  glm::vec3 m_vertical;
+
+  float m_lens_radius;
+  float m_focal_length;
 };

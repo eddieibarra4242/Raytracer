@@ -14,10 +14,10 @@
    limitations under the License.
 */
 
-#include "Metal.h"
+#include "Metal.hpp"
 
-#include "../Scene.h"
-#include "../vec_utilities.h"
+#include "../Scene.hpp"
+#include "../vec_utilities.hpp"
 
 Scatter Metal::scatter(const Ray &incident,
                        const Intersection &intersection) const {

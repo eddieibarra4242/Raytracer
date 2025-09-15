@@ -16,15 +16,20 @@
 
 #pragma once
 
-#include "Material.h"
+#include "../vec_utilities.hpp"
+#include "Shape.hpp"
 
-class Emissive : public Material {
+class Plane : public Shape {
 public:
-  explicit Emissive(const glm::vec3 &color) : m_color(color) {}
+  Plane(const glm::vec3 &normal, const glm::vec3 &point,
+        const std::shared_ptr<Material> &material)
+    : Shape(material), m_normal{normalize(normal)}, m_point{point} {}
 
-  [[nodiscard]] Scatter
-  scatter(const Ray &incident, const Intersection &intersection) const override;
+  [[nodiscard]] glm::vec3 normal(const glm::vec3 &point) override;
+  [[nodiscard]] float intersect(const Ray &ray) override;
 
 private:
-  glm::vec3 m_color;
+  glm::vec3 m_normal;
+  glm::vec3 m_point; // TODO: change to a scalar representation.
+                     // float m_distance;
 };

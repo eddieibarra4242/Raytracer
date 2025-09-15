@@ -14,17 +14,17 @@
    limitations under the License.
 */
 
-#include "Renderer.h"
-#include "log.h"
-#include "vec_utilities.h"
+#include "Renderer.hpp"
+#include "log.hpp"
+#include "vec_utilities.hpp"
 
-#include "shapes/Plane.h"
-#include "shapes/Sphere.h"
+#include "shapes/Plane.hpp"
+#include "shapes/Sphere.hpp"
 
-#include "materials/Dielectric.h"
-#include "materials/Emissive.h"
-#include "materials/Lambertian.h"
-#include "materials/Metal.h"
+#include "materials/Dielectric.hpp"
+#include "materials/Emissive.hpp"
+#include "materials/Lambertian.hpp"
+#include "materials/Metal.hpp"
 
 constexpr glm::vec3 CAMERA_POSITION{-13, 2, 3};
 constexpr glm::vec3 CAMERA_FORWARD = glm::vec3{0, 0, 0} - CAMERA_POSITION;

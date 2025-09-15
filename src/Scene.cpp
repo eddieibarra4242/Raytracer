@@ -14,9 +14,9 @@
    limitations under the License.
 */
 
-#include "Scene.h"
+#include "Scene.hpp"
 
-#include "vec_utilities.h"
+#include "vec_utilities.hpp"
 
 Intersection Scene::hit(std::vector<std::shared_ptr<Sphere>> &spheres,
                         const Ray &ray) {

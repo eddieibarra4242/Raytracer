@@ -16,15 +16,21 @@
 
 #pragma once
 
-#include "Material.h"
+#include "../Ray.hpp"
+#include <glm/glm.hpp>
 
-class Lambertian : public Material {
+struct Intersection;
+
+struct Scatter {
+  bool absorbed;
+  bool emissive = false;
+  glm::vec3 attenuation;
+  Ray scattered_ray;
+};
+
+class Material {
 public:
-  explicit Lambertian(const glm::vec3 &albedo) : m_albedo(albedo) {}
-
-  [[nodiscard]] Scatter
-  scatter(const Ray &incident, const Intersection &intersection) const override;
-
-private:
-  glm::vec3 m_albedo;
+  virtual ~Material() = default;
+  [[nodiscard]] virtual Scatter
+  scatter(const Ray &incident, const Intersection &intersection) const = 0;
 };

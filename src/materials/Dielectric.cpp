@@ -14,10 +14,10 @@
    limitations under the License.
 */
 
-#include "Dielectric.h"
-#include "../Scene.h"
+#include "Dielectric.hpp"
+#include "../Scene.hpp"
 
-#include "../vec_utilities.h"
+#include "../vec_utilities.hpp"
 
 constexpr float reflectance(float cos, float refraction_index) {
   auto r0 = (1.0 - static_cast<double>(refraction_index)) /

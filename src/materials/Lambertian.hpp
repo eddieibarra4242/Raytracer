@@ -16,16 +16,15 @@
 
 #pragma once
 
-#include "Material.h"
+#include "Material.hpp"
 
-class Dielectric : public Material {
+class Lambertian : public Material {
 public:
-  explicit Dielectric(float refraction_index)
-    : m_refraction_index{refraction_index} {}
+  explicit Lambertian(const glm::vec3 &albedo) : m_albedo(albedo) {}
 
   [[nodiscard]] Scatter
   scatter(const Ray &incident, const Intersection &intersection) const override;
 
 private:
-  float m_refraction_index;
+  glm::vec3 m_albedo;
 };

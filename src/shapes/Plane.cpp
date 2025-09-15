@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-#include "Plane.h"
+#include "Plane.hpp"
 
 float Plane::intersect(const Ray &ray) {
   float denominator = dot(m_normal, ray.direction);

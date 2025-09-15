@@ -16,25 +16,15 @@
 
 #pragma once
 
-#include <glm/glm.hpp>
+#include "Material.hpp"
 
-#include "../Ray.h"
-#include "../shapes/Sphere.h"
-
-class AABB {
+class Emissive : public Material {
 public:
-  AABB() = default;
-  AABB(glm::vec3 corner1, glm::vec3 corner2)
-    : m_min(glm::min(corner1, corner2)), m_max(glm::max(corner1, corner2)) {}
+  explicit Emissive(const glm::vec3 &color) : m_color(color) {}
 
-  [[nodiscard]] bool intersect(const Ray &ray) const;
-
-  void fit(const Sphere &s);
-
-  [[nodiscard]] constexpr glm::vec3 min() const { return m_min; }
-  [[nodiscard]] constexpr glm::vec3 max() const { return m_max; }
+  [[nodiscard]] Scatter
+  scatter(const Ray &incident, const Intersection &intersection) const override;
 
 private:
-  glm::vec3 m_min;
-  glm::vec3 m_max;
+  glm::vec3 m_color;
 };

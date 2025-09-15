@@ -16,25 +16,21 @@
 
 #pragma once
 
-#include <memory>
-#include <utility>
+#include "Shape.hpp"
 
-#include "../Ray.h"
-#include "../materials/Material.h"
-
-class Shape {
+class Sphere : public Shape {
 public:
-  explicit Shape(std::shared_ptr<Material> material)
-    : m_material{std::move(material)} {}
-  virtual ~Shape() = default;
+  Sphere(const glm::vec3 &position, float radius,
+         const std::shared_ptr<Material> &material)
+    : Shape(material), m_position{position}, m_radius{radius} {}
 
-  [[nodiscard]] virtual glm::vec3 normal(const glm::vec3 &point) = 0;
-  [[nodiscard]] virtual float intersect(const Ray &ray) = 0;
+  [[nodiscard]] glm::vec3 normal(const glm::vec3 &point) override;
+  [[nodiscard]] float intersect(const Ray &ray) override;
 
-  [[nodiscard]] inline std::shared_ptr<Material> material() const {
-    return m_material;
-  }
+  [[nodiscard]] constexpr glm::vec3 position() const { return m_position; };
+  [[nodiscard]] constexpr float radius() const { return m_radius; };
 
 private:
-  std::shared_ptr<Material> m_material;
+  glm::vec3 m_position;
+  float m_radius;
 };

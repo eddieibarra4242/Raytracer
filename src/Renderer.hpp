@@ -21,9 +21,9 @@
 #include <thread>
 #include <vector>
 
-#include "Bitmap.h"
-#include "Camera.h"
-#include "Scene.h"
+#include "Bitmap.hpp"
+#include "Camera.hpp"
+#include "Scene.hpp"
 
 struct Quad {
   using vec2i = glm::vec<2, uint32_t, glm::defaultp>;

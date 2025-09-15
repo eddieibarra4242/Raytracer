@@ -14,8 +14,8 @@
    limitations under the License.
 */
 
-#include "Renderer.h"
-#include "Window.h"
+#include "Renderer.hpp"
+#include "Window.hpp"
 
 int main() {
   static constexpr uint32_t WIDTH = 1280;

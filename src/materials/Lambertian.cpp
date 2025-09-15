@@ -14,10 +14,10 @@
    limitations under the License.
 */
 
-#include "Lambertian.h"
+#include "Lambertian.hpp"
 
-#include "../Scene.h"
-#include "../vec_utilities.h"
+#include "../Scene.hpp"
+#include "../vec_utilities.hpp"
 
 Scatter Lambertian::scatter([[maybe_unused]] const Ray &incident,
                             const Intersection &intersection) const {

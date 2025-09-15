@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-#include "AABB.h"
+#include "AABB.hpp"
 
 constexpr uint8_t RIGHT = 0;
 constexpr uint8_t LEFT = 1;

@@ -16,7 +16,7 @@
 
 #pragma once
 
-#include "Material.h"
+#include "Material.hpp"
 
 class Metal : public Material {
 public:

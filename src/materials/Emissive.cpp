@@ -14,10 +14,10 @@
    limitations under the License.
 */
 
-#include "Emissive.h"
+#include "Emissive.hpp"
 
-#include "../Scene.h"
-#include "../vec_utilities.h"
+#include "../Scene.hpp"
+#include "../vec_utilities.hpp"
 
 static constexpr glm::vec3 ZERO{0, 0, 0};
 

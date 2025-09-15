@@ -16,28 +16,25 @@
 
 #pragma once
 
-#include <glm/glm.hpp>
+#include <memory>
+#include <utility>
 
-#include "Ray.h"
+#include "../Ray.hpp"
+#include "../materials/Material.hpp"
 
-class Camera {
+class Shape {
 public:
-  Camera(const glm::vec3 &position, const glm::vec3 &forward,
-         float aspect_ratio, float fov, float aperture, float focal_length);
+  explicit Shape(std::shared_ptr<Material> material)
+    : m_material{std::move(material)} {}
+  virtual ~Shape() = default;
 
-  Ray to_ray(float x, float y);
+  [[nodiscard]] virtual glm::vec3 normal(const glm::vec3 &point) = 0;
+  [[nodiscard]] virtual float intersect(const Ray &ray) = 0;
+
+  [[nodiscard]] inline std::shared_ptr<Material> material() const {
+    return m_material;
+  }
 
 private:
-  glm::vec3 m_position;
-
-  glm::vec3 m_forward;
-  glm::vec3 m_up;
-  glm::vec3 m_right;
-
-  glm::vec3 m_top_left;
-  glm::vec3 m_horizontal;
-  glm::vec3 m_vertical;
-
-  float m_lens_radius;
-  float m_focal_length;
+  std::shared_ptr<Material> m_material;
 };

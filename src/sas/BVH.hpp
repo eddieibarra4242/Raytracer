@@ -19,36 +19,29 @@
 #include <memory>
 #include <vector>
 
-#include "sas/BVH.h"
-#include "shapes/Shape.h"
+#include "../Ray.hpp"
+#include "../shapes/Sphere.hpp"
+#include "AABB.hpp"
 
-struct Intersection {
-  bool has_hit;
-  bool front_face;
-  float distance;
-  glm::vec3 intersection_point;
-  glm::vec3 normal;
-  std::shared_ptr<Shape> shape;
+struct Node {
+  std::unique_ptr<Node> m_left;
+  std::unique_ptr<Node> m_right;
+  AABB m_boundingBox;
+  std::vector<std::shared_ptr<Sphere>> m_spheres;
 };
 
-class Scene {
+class BVH {
 public:
-  Scene() = default;
+  BVH() = default;
 
-  inline void add_shape(const std::shared_ptr<Sphere> &sphere) {
-    bvh.add(sphere);
-  }
+  void add(const std::shared_ptr<Sphere> &s);
+  void process();
 
-  inline void process() { bvh.process(); }
-
-  [[nodiscard]] constexpr size_t getNumIntersections() const {
-    return m_numIntersections;
-  }
-
-  [[nodiscard]] Intersection hit(std::vector<std::shared_ptr<Sphere>> &spheres,
-                                 const Ray &ray);
+  size_t
+  coarseIntersect(std::vector<std::shared_ptr<Sphere>> &potiential_spheres,
+                  const Ray &ray) const;
 
 private:
-  BVH bvh;
-  size_t m_numIntersections = 0;
+  static constexpr int MAX_SPHERES = 5;
+  Node m_root;
 };

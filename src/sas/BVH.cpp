@@ -14,7 +14,7 @@
    limitations under the License.
 */
 
-#include "BVH.h"
+#include "BVH.hpp"
 
 #include <algorithm>
 #include <queue>

@@ -1,6 +1,6 @@
 #pragma once
 
-#include <stdlib.h>
+#include <cstdlib>
 
 #define DEBUG_LEVEL 10
 #define INFO_LEVEL 5

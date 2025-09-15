@@ -14,8 +14,8 @@
    limitations under the License.
 */
 
-#include "Camera.h"
-#include "vec_utilities.h"
+#include "Camera.hpp"
+#include "vec_utilities.hpp"
 
 constexpr float VIEW_PORT_HEIGHT = 2.2f;
 

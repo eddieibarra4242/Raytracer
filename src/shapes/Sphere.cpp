@@ -14,8 +14,8 @@
    limitations under the License.
 */
 
-#include "Sphere.h"
-#include "../vec_utilities.h"
+#include "Sphere.hpp"
+#include "../vec_utilities.hpp"
 
 float Sphere::intersect(const Ray &ray) {
   glm::vec3 to_center = ray.origin - m_position;
